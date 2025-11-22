@@ -3,11 +3,11 @@ package ie.tus.project;
  public class PCharacter   {
 
 	private String name;
-	private String species;
-	private String pClass;
-	private String background;
+	private Species species;
+	private Classes pClass;
+	private Background background;
 	
-	public PCharacter(String name, String pClass, String species, String background){
+	public PCharacter(String name, Classes pClass, Species species, Background background){
 		this.name = name;
 		this.pClass = pClass;
 		this.species = species;
@@ -26,19 +26,19 @@ package ie.tus.project;
 		
 	}
 	
-	public String getName(PCharacter player) {
+	public String getName() {
 		return name;
 	}
 	
-	public String getPClass(PCharacter player) {
+	public Classes getPClass() {
 		return pClass;
 	}
 	
-	public String getSpecies(PCharacter player) {
+	public Species getSpecies() {
 		return species;
 	}
 	
-	public String getBackground(PCharacter player) {
+	public Background getBackground() {
 		return background;
 	}
 	

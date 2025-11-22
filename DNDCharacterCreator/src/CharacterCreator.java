@@ -16,7 +16,14 @@ void main(){
 	
 	//Main Loop
 	do{System.out.println("1. Create Character");
-		input = sc.nextInt();
+		if (sc.hasNextInt()) {
+	        input = sc.nextInt();
+	    } else {
+	        System.out.println("Invalid input, please enter a valid number");
+	        sc.next(); // consume invalid token
+	        continue; // restart loop
+	    }
+		
 		switch(input) {
 		case 1:
 			IO.println("Entered Create Character\n");
@@ -34,7 +41,10 @@ void main(){
 
 //Create Character
 public void createCharacter() {
-	String name,pClass,species,background;
+	String name;
+	Classes pClass;
+	Species species;
+	Background background;
 	//Enter Character Details
 	//IO.println("Enter Character Name");
 	//String name =IO.readln();
@@ -56,9 +66,9 @@ public String setName() {
 	return name;
 }
 
-public String setClass() {
+public Classes setClass() {
 	int  pClass =0;
-	String finalClass;
+	Classes selectedClass;
 	do{System.out.println("1. Select Class");
 	for (Classes c : Classes.values()) {
         System.out.println((c.ordinal() + 1) + ". " + c);
@@ -66,44 +76,42 @@ public String setClass() {
 	 IO.println("Select Class");
 	 pClass = sc.nextInt();
      IO.println(pClass);
-     Classes selectedClass =Classes.values()[pClass-1];
+    selectedClass =Classes.values()[pClass-1];
      System.out.println("Class is: "+selectedClass );
-     finalClass = selectedClass.toString();
+     // = selectedClass.toString();
 }while(pClass <1 || pClass >12);
-	return finalClass;
+	return selectedClass;
 	
 }
 
-public String setSpecies() {
+public Species setSpecies() {
 	int  species =0;
-	String finalSpecies;
+	Species selectedSpecies;
 	do{System.out.println("Select Species");
 	for (Species s : Species.values()) {
         System.out.println((s.ordinal() + 1) + ". " + s);
     }
 	 species = sc.nextInt();
      IO.println(species);
-     Species selectedSpecies =Species.values()[species-1];
+     selectedSpecies =Species.values()[species-1];
      System.out.println(selectedSpecies );
-     finalSpecies = selectedSpecies.toString();
 }while(species <1 || species >10);
-	return finalSpecies;
+	return selectedSpecies;
 }
 
-public String setBackground() {
+public Background setBackground() {
 	int  bg =0;
-	String finalBackground;
+	Background selectedBackground;
 	do{System.out.println("Select Background");
 	for (Background b : Background.values()) {
         System.out.println((b.ordinal() + 1) + ". " + b);
     }
 	 bg = sc.nextInt();
      IO.println(bg);
-     Background selectedBackground =Background.values()[bg-1];
+     selectedBackground =Background.values()[bg-1];
      System.out.println(selectedBackground );
-     finalBackground = selectedBackground.toString();
 }while(bg <1 || bg >16);
-	return finalBackground;
+	return selectedBackground;
 }
 
 public void displayCharacter(PCharacter pCharacter) {
