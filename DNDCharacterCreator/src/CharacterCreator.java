@@ -15,7 +15,10 @@ void main(){
 	System.out.println("Please select an option");
 	
 	//Main Loop
-	do{System.out.println("1. Create Character");
+	do{
+	System.out.println("1. Create Character");
+	System.out.println("2. Quick Character");
+	System.out.println("3. Display Characters Character");
 		if (sc.hasNextInt()) {
 	        input = sc.nextInt();
 	    } else {
@@ -29,6 +32,10 @@ void main(){
 			IO.println("Entered Create Character\n");
 			createCharacter();
 			break;
+		case 2:
+			IO.println("Entered Default Character\n");
+			createCharacter("Adventurer", Classes.Fighter, Species.HUMAN);
+			break;
 		default:
 			IO.println("Invalid Option\n");
 			break;
@@ -41,22 +48,24 @@ void main(){
 
 //Create Character
 public void createCharacter() {
-	String name;
-	Classes pClass;
-	Species species;
-	Background background;
+//	String name;
+//	Classes pClass;
+//	Species species;
+//	Background background;
 	//Enter Character Details
-	//IO.println("Enter Character Name");
-	//String name =IO.readln();
-//	IO.println(name);
-	name=this.setName();
-	pClass = this.setClass();
-	species = this.setSpecies();
-	background = this.setBackground();
-	PCharacter playerCharacter = new PCharacter(name, pClass, species, background);
-	this.displayCharacter(playerCharacter);
+	var name=setName();
+	var pClass = setClass();
+	var species = setSpecies();
+	var background = setBackground();
+	var  playerCharacter = new PCharacter(name, pClass, species);
+	displayCharacter(playerCharacter);
 	//Display Classes from Classes Enum
 	
+}
+
+public void createCharacter(String name, Classes pClass, Species species) {
+    var playerCharacter = new PCharacter(name, pClass, species);
+    displayCharacter(playerCharacter);
 }
 
 public String setName() {
