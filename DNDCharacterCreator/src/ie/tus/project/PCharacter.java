@@ -1,26 +1,31 @@
 package ie.tus.project;
 
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Scanner;
 //Fiels are final and private automatically
- public record PCharacter(String name, Classes pClass, Species species, Background background)   {
+ public record PCharacter(String name, Classes pClass, Species species, Background background, int[] stats)   {
 	
 //	private String name;
 //	private Species species;
 //	private Classes pClass;
 //	private Background background;
 	
-	public PCharacter(String name, Classes pClass, Species species, Background background){
+	public PCharacter(String name, Classes pClass, Species species, Background background, int[] stats){
 		this.name = name;
 		this.pClass = pClass;
 		this.species = species;
 		this.background = background;
+		this.stats = stats;
+		stats = Arrays.copyOf(stats, stats.length);
 		
 	}
 	
+
+	
 	// Overloaded constructor with default background
     public PCharacter(String name, Classes pClass, Species species) {
-        this(name, pClass, species, Background.ACOLYTE); // choose default
+        this(name, pClass, species, Background.ACOLYTE, new int[]{10,10,10,10,10,10}); // choose default
     }
 	//Object Ability Score Improvements
 	//Abstract Level up
@@ -75,7 +80,7 @@ import java.util.Scanner;
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "Character Details\n"+"name: "+name+"\nSpecies: "+species+"\nBackground: "+background;
+		return "Character Details\n"+"name: "+name+"\nSpecies: "+species+"\nBackground: "+background+"\nStats"+Arrays.toString(stats);
 	}
 	
 	private int readInt(String input, int min, int max) {

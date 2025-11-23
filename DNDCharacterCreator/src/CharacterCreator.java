@@ -57,8 +57,10 @@ public void createCharacter() {
 	var pClass = setClass();
 	var species = setSpecies();
 	var background = setBackground();
-	var  playerCharacter = new PCharacter(name, pClass, species);
+	var stats = rollStatsWithReroll();
+	var  playerCharacter = new PCharacter(name, pClass, species, background, stats);
 	displayCharacter(playerCharacter);
+	rollStats();
 	//Display Classes from Classes Enum
 	
 }
@@ -125,4 +127,32 @@ public Background setBackground() {
 
 public void displayCharacter(PCharacter pCharacter) {
 	IO.println(pCharacter.toString());
+}
+
+public int[] rollStats() {
+	var stats = new int[6];
+	for(int i =0; i<6; i++) {
+		var rollTotal = new int[4];
+		for(int j =0; j<4;j++) {
+			rollTotal[j] = (int)(Math.random()*6)+1;
+		}
+		Arrays.sort(rollTotal);
+		stats[i] =rollTotal[1]+rollTotal[2]+rollTotal[3];
+	}
+	return stats;
+}
+
+public int[] rollStatsWithReroll() {
+	int[] stats;
+	do {
+		stats = rollStats();
+		System.out.println("You rolled: "+ Arrays.toString(stats));
+		System.out.println("Do you want to keep these stats? (Y/N)");
+		String answer = IO.readln().trim().toUpperCase();
+		if(answer.equals("Y")) {
+			return stats;
+		}
+		System.out.println("Rerolling stats...\n");
+		
+	}while (true);
 }
