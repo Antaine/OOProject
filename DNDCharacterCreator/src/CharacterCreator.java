@@ -20,6 +20,7 @@ void main(){
 	System.out.println("1. Create Character");
 	System.out.println("2. Quick Character");
 	System.out.println("3. Display Characters Character");
+	System.out.println("4. Save Characters to File");
 		if (sc.hasNextInt()) {
 	        input = sc.nextInt();
 	    } else {
@@ -39,6 +40,9 @@ void main(){
 			break;
 		case 3:
 			displayAllCharacters();
+			break;
+		case 4:
+			saveCharactersToFile();
 			break;
 		default:
 			IO.println("Invalid Option\n");
@@ -178,3 +182,43 @@ public int[] rollStatsWithReroll() {
 		
 	}while (true);
 }
+
+public String toJson(PCharacter pc) {
+	StringBuilder sb = new StringBuilder();
+	sb.append("{\n");
+	sb.append("  \"name\": \"").append(pc.name()).append("\",\n");
+    sb.append("  \"class\": \"").append(pc.pClass()).append("\",\n");
+    sb.append("  \"species\": \"").append(pc.species()).append("\",\n");
+    sb.append("  \"background\": \"").append(pc.background()).append("\",\n");
+    sb.append("  \"stats\": [");
+    for(int i =0; i<pc.stats().length;i++) {
+    	sb.append(pc.stats()[i]);
+    	if(i<pc.stats().length -1) sb.append(",");
+    
+    }
+	sb.append("]\n");
+	sb.append("}");
+	return sb.toString();
+}
+
+public void saveCharactersToFile() {
+	try {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[\n");
+		for(int i = 0; i<characters.size(); i++) {
+			sb.append(toJson(characters.get(i)));
+			if(i <characters.size() -1) sb.append(",\n");
+		}
+		sb.append("\n");
+		java.nio.file.Files.writeString(
+				java.nio.file.Path.of("characters.json"),
+				sb.toString()
+		);
+		
+		System.out.println("Characters saved to characters.json");
+	} catch(Exception e) {
+		System.out.println("Error saving characters: "+e.getMessage());
+	}
+}
+
+
