@@ -5,6 +5,7 @@ import ie.tus.project.Background;
 import ie.tus.project.Classes;
 import ie.tus.project.Species;
 Scanner sc = new Scanner(System.in);
+List<PCharacter> characters = new ArrayList<>();
 //Main Method Compact Source File
 void main(){
 	//Variables
@@ -36,6 +37,9 @@ void main(){
 			IO.println("Entered Default Character\n");
 			createCharacter("Adventurer", Classes.Fighter, Species.HUMAN);
 			break;
+		case 3:
+			displayAllCharacters();
+			break;
 		default:
 			IO.println("Invalid Option\n");
 			break;
@@ -44,6 +48,21 @@ void main(){
 
 
 	
+}
+
+private void displayAllCharacters() {
+	// TODO Auto-generated method stub
+	if(characters.isEmpty()) {
+		System.out.println("No Characters Loaded");
+		return;
+	}
+	
+	System.out.println("Saved Characters:");
+	int i =1;
+	for(var c : characters) {
+		System.out.println("\nCharacter #"+i++);
+		System.out.println(c);
+	}
 }
 
 //Create Character
@@ -60,7 +79,8 @@ public void createCharacter() {
 	var stats = rollStatsWithReroll();
 	var  playerCharacter = new PCharacter(name, pClass, species, background, stats);
 	displayCharacter(playerCharacter);
-	rollStats();
+	characters.add(playerCharacter);
+	System.out.println("Character saved!\n");
 	//Display Classes from Classes Enum
 	
 }
@@ -68,6 +88,8 @@ public void createCharacter() {
 public void createCharacter(String name, Classes pClass, Species species) {
     var playerCharacter = new PCharacter(name, pClass, species);
     displayCharacter(playerCharacter);
+    characters.add(playerCharacter);
+	System.out.println("Quick Character saved!\n");
 }
 
 public String setName() {
