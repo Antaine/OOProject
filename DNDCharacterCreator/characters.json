@@ -1,15 +1,8 @@
 [
 {
   "name": "A",
-  "class": "Bard",
-  "species": "DRAGONBORN",
-  "background": "ARTISAN",
-  "stats": [15,7,17,16,11,12]
-},
-{
-  "name": "B",
-  "class": "Druid",
-  "species": "ELF",
-  "background": "CRIMINAL",
-  "stats": [15,10,12,16,15,10]
+  "class": "Barbarian",
+  "species": "AASIMAR",
+  "background": "ACOLYTE",
+  "stats": [12,10,12,17,14,8]
 }

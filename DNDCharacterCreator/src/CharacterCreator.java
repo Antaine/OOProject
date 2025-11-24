@@ -5,7 +5,7 @@ import ie.tus.project.Background;
 import ie.tus.project.Classes;
 import ie.tus.project.Species;
 Scanner sc = new Scanner(System.in);
-List<PCharacter> characters = new ArrayList<>();
+private static List<PCharacter> characters = new ArrayList<>();
 //Main Method Compact Source File
 void main(){
 	//Variables
@@ -21,6 +21,7 @@ void main(){
 	System.out.println("2. Quick Character");
 	System.out.println("3. Display Characters Character");
 	System.out.println("4. Save Characters to File");
+	System.out.println("5. Load Characters from File");
 		if (sc.hasNextInt()) {
 	        input = sc.nextInt();
 	    } else {
@@ -43,6 +44,11 @@ void main(){
 			break;
 		case 4:
 			saveCharactersToFile();
+			break;
+		case 5:
+			var list = loadCharacters();
+			if(list.isEmpty()) {System.out.println("No Saved Characters on File");}
+			else {list.forEach(System.out::println);}
 			break;
 		default:
 			IO.println("Invalid Option\n");
@@ -219,6 +225,90 @@ public void saveCharactersToFile() {
 	} catch(Exception e) {
 		System.out.println("Error saving characters: "+e.getMessage());
 	}
+}
+
+/*public static void checkFileCharacters() {
+	File characterFile = new File("characters.json");
+	
+	if(!characterFile.exists()) {
+		System.out.println("No saved characters file found.");
+		return;
+	}
+	
+	List<PCharacter> loaded = load
+}*/
+
+public List<PCharacter> loadCharacters(){
+	var characters = new ArrayList<PCharacter>();
+	try {
+		var characterFile = new File("characters.json");
+		if(!characterFile.exists()) {
+			System.out.println("No saved characters found.");
+			return characters;
+		}
+		var rawCharacters = Files.readString(characterFile.toPath()).trim();
+		//Empty
+		if(rawCharacters.equals("[]")) return characters;
+		
+		rawCharacters = rawCharacters.substring(1,rawCharacters.length()-1);
+		var entries = rawCharacters.split("},\\{");
+		
+		for(int i =0; i< entries.length; i++) {
+			var jsonCharacter = entries[i];
+			if (!jsonCharacter.startsWith("{")) jsonCharacter = "{" + jsonCharacter;
+            if (!jsonCharacter.endsWith("}")) jsonCharacter = jsonCharacter + "}";
+            String name = extractValue(jsonCharacter, "name");
+            Classes pClass = Classes.valueOf(extractValue(jsonCharacter, "class"));
+            Species species = Species.valueOf(extractValue(jsonCharacter, "species"));
+            Background background = Background.valueOf(extractValue(jsonCharacter, "background"));
+            String statsString = jsonCharacter.substring(jsonCharacter.indexOf('[')+1, jsonCharacter.indexOf(']'));
+            int stats[] = Arrays.stream(statsString.split(","))
+            		.map(String::trim)
+            		.mapToInt(Integer::parseInt)
+            		.toArray();
+            characters.add(new PCharacter(name, pClass, species, background, stats));
+		}
+		
+		
+	}catch(Exception e) {
+		System.out.println("Error loading characters: "+e.getMessage());
+	}
+	
+	return characters;
+
+}
+
+private String extractValue(String json, String key) {
+	  // Look for:  "key": 
+    String target = "\"" + key + "\"";
+    int keyIndex = json.indexOf(target);
+    if (keyIndex == -1) return null;
+
+    // Move to after the colon
+    int colonIndex = json.indexOf(":", keyIndex);
+    if (colonIndex == -1) return null;
+
+    int start = colonIndex + 1;
+
+    // Skip spaces
+    while (start < json.length() && Character.isWhitespace(json.charAt(start))) {
+        start++;
+    }
+
+    // If value is quoted → String
+    if (json.charAt(start) == '"') {
+        start++;
+        int end = json.indexOf("\"", start);
+        return json.substring(start, end);
+    }
+
+    // Else → number or bool
+    int end = start;
+    while (end < json.length() && json.charAt(end) != ',' && json.charAt(end) != '}') {
+        end++;
+    }
+
+    return json.substring(start, end).trim();
 }
 
 
