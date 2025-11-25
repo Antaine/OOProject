@@ -46,9 +46,9 @@ void main(){
 			saveCharactersToFile();
 			break;
 		case 5:
-			var list = loadCharacters();
-			if(list.isEmpty()) {System.out.println("No Saved Characters on File");}
-			else {list.forEach(System.out::println);}
+			characters = loadCharacters();
+			if(characters.isEmpty()) {System.out.println("No Saved Characters on File");}
+			else {characters.forEach(System.out::println);}
 			break;
 		default:
 			IO.println("Invalid Option\n");

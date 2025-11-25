@@ -1,8 +1,13 @@
-[
-{
+[{
   "name": "A",
   "class": "Barbarian",
   "species": "AASIMAR",
   "background": "ACOLYTE",
-  "stats": [12,10,12,17,14,8]
-}
+  "stats": [14,12,13,12,17,4]
+},{
+  "name": "A",
+  "class": "Barbarian",
+  "species": "AASIMAR",
+  "background": "ACOLYTE",
+  "stats": [15,9,12,10,14,11]
+}]
