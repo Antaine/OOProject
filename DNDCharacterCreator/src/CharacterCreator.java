@@ -22,6 +22,7 @@ void main(){
 	System.out.println("3. Display Characters Character");
 	System.out.println("4. Save Characters to File");
 	System.out.println("5. Load Characters from File");
+	System.out.println("0. Exit Aplication");
 		if (sc.hasNextInt()) {
 	        input = sc.nextInt();
 	    } else {
@@ -42,6 +43,7 @@ void main(){
 	        else
 	            characters.forEach(System.out::println);
 	    }
+	    case 0 -> sentinel =0;
 	    default -> System.out.println("Invalid option");
 	}
 	}while(sentinel == 1);
@@ -65,6 +67,15 @@ private void displayAllCharacters() {
 	}
 }
 
+public void displayAssignedStats(int[] assignedStats) {
+    String[] abilities = {"Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"};
+    System.out.println("\nCharacter Ability Scores:");
+    for (int i = 0; i < abilities.length; i++) {
+        System.out.printf("%-12s : %d%n", abilities[i], assignedStats[i]);
+    }
+}
+
+
 //Create Character
 public void createCharacter() {
 //	String name;
@@ -77,7 +88,9 @@ public void createCharacter() {
 	var species = setSpecies();
 	var background = setBackground();
 	var stats = rollStatsWithReroll();
-	var  playerCharacter = new PCharacter(name, pClass, species, background, stats);
+	int[] abilityScores = assignStatsToAbilities(stats);
+	displayAssignedStats(abilityScores);
+	var  playerCharacter = new PCharacter(name, pClass, species, background, abilityScores);
 	displayCharacter(playerCharacter);
 	characters.add(playerCharacter);
 	System.out.println("Character saved!\n");
@@ -304,4 +317,39 @@ private String extractValue(String json, String key) {
     return json.substring(start, end).trim();
 }
 
+public int[] assignStatsToAbilities(int[] rolledStats) {
+    String[] abilities = {"Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"};
+    int[] assignedStats = new int[6];
+
+    // Convert to a mutable list
+    List<Integer> availableStats = new ArrayList<>();
+    for (int stat : rolledStats) availableStats.add(stat);
+
+    Scanner sc = new Scanner(System.in);
+
+    for (int i = 0; i < abilities.length; i++) {
+        System.out.println("\nAvailable stats: " + availableStats);
+        int choice = -1;
+
+        do {
+            System.out.print("Assign a stat to " + abilities[i] + ": ");
+            if (sc.hasNextInt()) {
+                choice = sc.nextInt();
+                if (availableStats.contains(choice)) {
+                    break; // valid choice
+                } else {
+                    System.out.println("Invalid choice. Pick a value from the available stats.");
+                }
+            } else {
+                System.out.println("Invalid input. Enter a number.");
+                sc.next(); // consume invalid token
+            }
+        } while (true);
+
+        assignedStats[i] = choice;
+        availableStats.remove((Integer) choice); // remove chosen stat
+    }
+
+    return assignedStats;
+}
 
