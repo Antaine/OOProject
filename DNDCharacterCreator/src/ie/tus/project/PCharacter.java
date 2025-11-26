@@ -11,14 +11,23 @@ import java.util.Scanner;
 //	private Classes pClass;
 //	private Background background;
 	
-	public PCharacter(String name, Classes pClass, Species species, Background background, int[] stats){
-		this.name = name;
-		this.pClass = pClass;
+	public PCharacter{
+		/*this.pClass = pClass;
 		this.species = species;
 		this.background = background;
-		this.stats = stats;
-		stats = Arrays.copyOf(stats, stats.length);
-		
+	//	this.stats = stats;*/
+		if (name == null || pClass == null || species == null || background == null) {
+	        throw new IllegalArgumentException("Name, class, species, and background cannot be null");
+	    }
+	    if (stats == null || stats.length != 6) {
+	        throw new IllegalArgumentException("Stats must be an array of 6 integers");
+	    }
+	    for (int s : stats) {
+	        if (s < 3 || s > 18) {
+	            throw new IllegalArgumentException("Each stat must be between 3 and 18: " + Arrays.toString(stats));
+	        }
+	    }
+	    stats = Arrays.copyOf(stats, stats.length);
 	}
 	
 
@@ -35,6 +44,12 @@ import java.util.Scanner;
 /*	PCharacter(String name){
 		this.name = name;
 	}*/
+    
+    @Override
+    public int[] stats() {
+        return Arrays.copyOf(stats, stats.length);
+    }
+    
 	private String setName() {
 		IO.println("Enter Character Name");
 		return IO.readln();
@@ -80,7 +95,7 @@ import java.util.Scanner;
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "Character Details\n"+"name: "+name+"\nSpecies: "+species+"\nBackground: "+background+"\nStats"+Arrays.toString(stats);
+		return "Character Details\n"+"name: "+name+  "\nClass: " + pClass+"\nSpecies: "+species+"\nBackground: "+background+"\nStats"+Arrays.toString(stats);
 	}
 	
 	private int readInt(String input, int min, int max) {

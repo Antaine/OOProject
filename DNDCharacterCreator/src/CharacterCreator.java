@@ -30,30 +30,20 @@ void main(){
 	        continue; // restart loop
 	    }
 		
-		switch(input) {
-		case 1:
-			IO.println("Entered Create Character\n");
-			createCharacter();
-			break;
-		case 2:
-			IO.println("Entered Default Character\n");
-			createCharacter("Adventurer", Classes.Fighter, Species.HUMAN);
-			break;
-		case 3:
-			displayAllCharacters();
-			break;
-		case 4:
-			saveCharactersToFile();
-			break;
-		case 5:
-			characters = loadCharacters();
-			if(characters.isEmpty()) {System.out.println("No Saved Characters on File");}
-			else {characters.forEach(System.out::println);}
-			break;
-		default:
-			IO.println("Invalid Option\n");
-			break;
-		}
+		switch (input) {
+	    case 1 -> createCharacter();
+	    case 2 -> createCharacter("Adventurer", Classes.Fighter, Species.HUMAN);
+	    case 3 -> displayAllCharacters();
+	    case 4 -> saveCharactersToFile();
+	    case 5 -> {
+	        characters = loadCharacters();
+	        if (characters.isEmpty())
+	            System.out.println("No Saved Characters on File");
+	        else
+	            characters.forEach(System.out::println);
+	    }
+	    default -> System.out.println("Invalid option");
+	}
 	}while(sentinel == 1);
 
 
@@ -178,13 +168,16 @@ public int[] rollStatsWithReroll() {
 	int[] stats;
 	do {
 		stats = rollStats();
+		int totalRoll = Arrays.stream(stats).sum();
 		System.out.println("You rolled: "+ Arrays.toString(stats));
-		System.out.println("Do you want to keep these stats? (Y/N)");
-		String answer = IO.readln().trim().toUpperCase();
-		if(answer.equals("Y")) {
-			return stats;
+		System.out.println("Sum of ability scores: "+ totalRoll);
+		if(totalRoll >=70) {
+			System.out.println("Do you want to keep these stats? (Y/N)");
+			String answer = IO.readln().trim().toUpperCase();
+			if(answer.equals("Y")) {return stats;}
+			System.out.println("Rerolling stats...\n");
 		}
-		System.out.println("Rerolling stats...\n");
+		else {System.out.println("Total below <70. Rerolling...\n");}
 		
 	}while (true);
 }
@@ -251,7 +244,7 @@ public List<PCharacter> loadCharacters(){
 		if(rawCharacters.equals("[]")) return characters;
 		
 		rawCharacters = rawCharacters.substring(1,rawCharacters.length()-1);
-		var entries = rawCharacters.split("},\\{");
+		var entries = rawCharacters.split("\\},\\s*\\{");
 		
 		for(int i =0; i< entries.length; i++) {
 			var jsonCharacter = entries[i];

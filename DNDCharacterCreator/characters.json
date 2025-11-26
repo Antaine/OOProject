@@ -1,13 +1,15 @@
-[{
+[
+{
   "name": "A",
-  "class": "Barbarian",
-  "species": "AASIMAR",
+  "class": "Sorcerer",
+  "species": "ORC",
+  "background": "SCRIBE",
+  "stats": [15,15,13,7,15,12]
+},
+{
+  "name": "Adventurer",
+  "class": "Fighter",
+  "species": "HUMAN",
   "background": "ACOLYTE",
-  "stats": [14,12,13,12,17,4]
-},{
-  "name": "A",
-  "class": "Barbarian",
-  "species": "AASIMAR",
-  "background": "ACOLYTE",
-  "stats": [15,9,12,10,14,11]
-}]
+  "stats": [10,10,10,10,10,10]
+}
