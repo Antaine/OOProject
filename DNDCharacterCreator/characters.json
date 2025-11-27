@@ -1,15 +1,8 @@
 [
 {
-  "name": "A",
-  "class": "Sorcerer",
-  "species": "ORC",
+  "name": "Fert",
+  "class": "Wizard",
+  "species": "GNOME",
   "background": "SCRIBE",
-  "stats": [15,15,13,7,15,12]
-},
-{
-  "name": "Adventurer",
-  "class": "Fighter",
-  "species": "HUMAN",
-  "background": "ACOLYTE",
-  "stats": [10,10,10,10,10,10]
+  "stats": [16,8,12,15,14,13]
 }

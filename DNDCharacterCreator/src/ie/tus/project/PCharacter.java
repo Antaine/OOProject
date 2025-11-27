@@ -3,8 +3,9 @@ package ie.tus.project;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Scanner;
+import ie.tus.project.Classes;
 //Fiels are final and private automatically
- public record PCharacter(String name, Classes pClass, Species species, Background background, int[] stats)   {
+ public record PCharacter(String name, Classes pClass, Species species, Background background, int[] stats,int  level, int hp)    {
 	
 //	private String name;
 //	private Species species;
@@ -28,13 +29,20 @@ import java.util.Scanner;
 	        }
 	    }
 	    stats = Arrays.copyOf(stats, stats.length);
+	    level =1;
+	    int conMod = (stats[2]-10)/2;
+	    hp = pClass.hitDie() + conMod;
 	}
 	
+    public PCharacter(String name, Classes pClass,
+            Species species, Background background,
+            int[] stats) {
 
+this(name,pClass,species,background,Arrays.copyOf(stats, stats.length),1,Math.max(1, pClass.hitDie() +(stats[2] - 10) / 2));}
 	
 	// Overloaded constructor with default background
     public PCharacter(String name, Classes pClass, Species species) {
-        this(name, pClass, species, Background.ACOLYTE, new int[]{10,10,10,10,10,10}); // choose default
+        this(name, pClass, species, Background.ACOLYTE, new int[]{10,10,10,10,10,10},0,0); // choose default
     }
 	//Object Ability Score Improvements
 	//Abstract Level up
@@ -95,7 +103,7 @@ import java.util.Scanner;
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "Character Details\n"+"name: "+name+  "\nClass: " + pClass+"\nSpecies: "+species+"\nBackground: "+background+"\nStats"+Arrays.toString(stats);
+		return "Character Details\n"+"name: "+name+  "\nClass: " + pClass+"\nSpecies: "+species+"\nBackground: "+background+"\nStats:"+Arrays.toString(stats) +"\nLevel:"+level+"\nHP:"+hp;
 	}
 	
 	private int readInt(String input, int min, int max) {
@@ -112,6 +120,14 @@ import java.util.Scanner;
 	            sc.next();
 	        }
 	    } while(true);
+	}
+	
+	public int maxHP() {
+		//+1 for every 2 points above 10;
+		//int con = stats[2];
+		int conModifier =0;
+		conModifier = (stats[2]-10)/2;
+		return pClass.hitDie() + conModifier;
 	}
 	
 	
