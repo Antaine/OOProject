@@ -4,6 +4,7 @@ import ie.tus.project.PCharacter;
 import ie.tus.project.Background;
 import ie.tus.project.Classes;
 import ie.tus.project.Species;
+import java.util.function.Predicate;
 Scanner sc = new Scanner(System.in);
 private static List<PCharacter> characters = new ArrayList<>();
 //Main Method Compact Source File
@@ -178,13 +179,14 @@ public int[] rollStats() {
 }
 
 public int[] rollStatsWithReroll() {
+	Predicate<int[]> rollAbove70 = stats -> Arrays.stream(stats).sum() >=70;
 	int[] stats;
 	do {
 		stats = rollStats();
 		int totalRoll = Arrays.stream(stats).sum();
 		System.out.println("You rolled: "+ Arrays.toString(stats));
 		System.out.println("Sum of ability scores: "+ totalRoll);
-		if(totalRoll >=70) {
+		if(rollAbove70.test(stats)) {
 			System.out.println("Do you want to keep these stats? (Y/N)");
 			String answer = IO.readln().trim().toUpperCase();
 			if(answer.equals("Y")) {return stats;}

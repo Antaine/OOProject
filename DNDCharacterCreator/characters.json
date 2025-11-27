@@ -1,8 +1,8 @@
 [
 {
-  "name": "Fert",
-  "class": "Wizard",
-  "species": "GNOME",
-  "background": "SCRIBE",
-  "stats": [16,8,12,15,14,13]
+  "name": "Colin",
+  "class": "Barbarian",
+  "species": "GOLIATH",
+  "background": "SOLDIER",
+  "stats": [18,14,17,14,13,14]
 }
