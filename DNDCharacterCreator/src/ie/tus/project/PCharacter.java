@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.util.Scanner;
 import ie.tus.project.Classes;
 //Fiels are final and private automatically
- public record PCharacter(String name, Classes pClass, Species species, Background background, int[] stats,int  level, int hp)    {
+ public record PCharacter(String name, Classes pClass, Species species, Background background, int[] stats,int  level, int hp) implements Describable   {
 	
 //	private String name;
 //	private Species species;
@@ -132,6 +132,15 @@ this(name,pClass,species,background,Arrays.copyOf(stats, stats.length),1,Math.ma
 	
 	
 	public void levelUp() {}
+
+	@Override
+	public String description() {
+		// TODO Auto-generated method stub
+		return String.format(
+	            "%s is a level %d %s %s with background %s. HP: %d. Stats: %s",
+	            name, level, species, pClass, background, hp, Arrays.toString(stats)
+	        );
+	}
 
 }
 

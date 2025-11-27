@@ -20,7 +20,7 @@ void main(){
 	do{
 	System.out.println("1. Create Character");
 	System.out.println("2. Quick Character");
-	System.out.println("3. Display Characters Character");
+	System.out.println("3. Display Characters");
 	System.out.println("4. Save Characters to File");
 	System.out.println("5. Load Characters from File");
 	System.out.println("0. Exit Aplication");
