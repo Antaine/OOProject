@@ -23,6 +23,7 @@ void main(){
 	System.out.println("3. Display Characters");
 	System.out.println("4. Save Characters to File");
 	System.out.println("5. Load Characters from File");
+	System.out.println("6. Select Character");
 	System.out.println("0. Exit Aplication");
 		if (sc.hasNextInt()) {
 	        input = sc.nextInt();
@@ -44,6 +45,7 @@ void main(){
 	        else
 	            characters.forEach(System.out::println);
 	    }
+	    case 6 -> selectCharacter();
 	    case 0 -> sentinel =0;
 	    default -> System.out.println("Invalid option");
 	}
@@ -66,6 +68,31 @@ private void displayAllCharacters() {
 		System.out.println("\nCharacter #"+i++);
 		System.out.println(c);
 	}
+}
+
+private void selectCharacter() {
+	if (characters.isEmpty()) {
+        System.out.println("No characters available to select.");
+        return;
+    }
+	System.out.println("Select a Character:");
+	 for (int i = 0; i < characters.size(); i++) 
+	 {System.out.printf("%d. %s%n", i + 1, characters.get(i).getName());}
+	 int input = readInt("Enter character number:", 1, characters.size());
+	 PCharacter selectedCharacter = characters.get(input - 1);
+	 System.out.println("\n--- Character Description ---");
+	 System.out.println(selectedCharacter.description());
+	 System.out.println("Is this the correct character? (Y/N)");
+	 String confirm = IO.readln().trim().toUpperCase();
+	 if (!confirm.equals("Y")) {System.out.println("Selection cancelled.");return;}
+	 
+	 System.out.println("Would you like to edit this character? (Y/N)");
+	 String edit = IO.readln().trim().toUpperCase();
+	 if (edit.equals("Y")) {
+	        //editCharacter(selectedCharacter);  
+	    } else {
+	        System.out.println("Character selection complete.");
+	    }
 }
 
 public void displayAssignedStats(int[] assignedStats) {
@@ -353,5 +380,21 @@ public int[] assignStatsToAbilities(int[] rolledStats) {
     }
 
     return assignedStats;
+}
+
+public static int readInt(String input, int min, int max) {
+	int val;
+	 Scanner sc = new Scanner(System.in);
+	do {
+        System.out.println(input);
+        if (sc.hasNextInt()) {
+            val = sc.nextInt();
+            if (val >= min && val <= max) return val;
+            else System.out.println("Enter a number between " + min + " and " + max);
+        } else {
+            System.out.println("Invalid input. Enter a number.");
+            sc.next();
+        }
+    } while(true);
 }
 

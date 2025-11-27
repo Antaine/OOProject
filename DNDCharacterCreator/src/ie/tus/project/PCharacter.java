@@ -106,7 +106,7 @@ this(name,pClass,species,background,Arrays.copyOf(stats, stats.length),1,Math.ma
 		return "Character Details\n"+"name: "+name+  "\nClass: " + pClass+"\nSpecies: "+species+"\nBackground: "+background+"\nStats:"+Arrays.toString(stats) +"\nLevel:"+level+"\nHP:"+hp;
 	}
 	
-	private int readInt(String input, int min, int max) {
+	public static int readInt(String input, int min, int max) {
 		int val;
 		 Scanner sc = new Scanner(System.in);
 		do {
