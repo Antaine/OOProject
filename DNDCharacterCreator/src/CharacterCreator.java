@@ -99,7 +99,10 @@ public void displayAssignedStats(int[] assignedStats) {
     String[] abilities = {"Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"};
     System.out.println("\nCharacter Ability Scores:");
     for (int i = 0; i < abilities.length; i++) {
-        System.out.printf("%-12s : %d%n", abilities[i], assignedStats[i]);
+    	int mod = PCharacter.abilityModifier(assignedStats[i]);
+    	//Check if positive or negative
+    	String modString = (mod >= 0 ? "+":"")+mod;
+        System.out.printf("%-14s : %2d (%s)%n", abilities[i], assignedStats[i], modString);
     }
 }
 
@@ -117,6 +120,7 @@ public void createCharacter() {
 	var background = setBackground();
 	var stats = rollStatsWithReroll();
 	int[] abilityScores = assignStatsToAbilities(stats);
+	abilityScoreImprovements(abilityScores);
 	displayAssignedStats(abilityScores);
 	var  playerCharacter = new PCharacter(name, pClass, species, background, abilityScores);
 	displayCharacter(playerCharacter);
@@ -124,6 +128,56 @@ public void createCharacter() {
 	System.out.println("Character saved!\n");
 	//Display Classes from Classes Enum
 	
+}
+
+private void abilityScoreImprovements(int[] stats) {
+	// TODO Auto-generated method stub
+	String[] abilities = {"Strength", "Dexterity", "Constitution","Intelligence", "Wisdom", "Charisma"};
+	int improvementPoints =3;
+    System.out.println("\nAbility Score Improvements");
+    System.out.println("You can spend up to 3 points.(Max of 20)");
+    
+  while(improvementPoints >0) {
+    	while (improvementPoints > 0) {
+            displayAssignedStats(stats);
+            System.out.println("Points remaining: " + improvementPoints);
+
+            int choice = -1;
+            do {
+                System.out.print("Choose an ability (1–6): ");
+                if (sc.hasNextInt()) {
+                    choice = sc.nextInt() - 1;
+                } else {
+                    sc.next();
+                }
+            } while (choice < 0 || choice >= 6);
+
+            if (stats[choice] >= 20) {
+                System.out.println("That ability is already at max (20).");
+                continue;
+            }
+
+            int maxSpend = Math.min(improvementPoints, 20 - stats[choice]);
+
+            int spend;
+            do {
+                System.out.print("Spend points (1–" + maxSpend + "): ");
+                while (!sc.hasNextInt()) sc.next();
+                spend = sc.nextInt();
+            } while (spend < 1 || spend > maxSpend);
+
+            stats[choice] += spend;
+            improvementPoints -= spend;
+
+            System.out.println(
+                abilities[choice] + " increased to " + stats[choice]
+            );
+        }
+
+        System.out.println("Ability Score Improvements complete.\n");
+    }
+    
+
 }
 
 public void createCharacter(String name, Classes pClass, Species species) {

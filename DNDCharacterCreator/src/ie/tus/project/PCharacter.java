@@ -24,8 +24,8 @@ import ie.tus.project.Classes;
 	        throw new IllegalArgumentException("Stats must be an array of 6 integers");
 	    }
 	    for (int s : stats) {
-	        if (s < 3 || s > 18) {
-	            throw new IllegalArgumentException("Each stat must be between 3 and 18: " + Arrays.toString(stats));
+	        if (s < 3 || s > 20) {
+	            throw new IllegalArgumentException("Each stat must be between 3 and 20: " + Arrays.toString(stats));
 	        }
 	    }
 	    stats = Arrays.copyOf(stats, stats.length);
@@ -52,6 +52,10 @@ this(name,pClass,species,background,Arrays.copyOf(stats, stats.length),1,Math.ma
 /*	PCharacter(String name){
 		this.name = name;
 	}*/
+    
+    public static int abilityModifier(int abilityScore) {
+    	return (abilityScore-10)/2 ;
+    }
     
     @Override
     public int[] stats() {
@@ -103,7 +107,27 @@ this(name,pClass,species,background,Arrays.copyOf(stats, stats.length),1,Math.ma
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "Character Details\n"+"name: "+name+  "\nClass: " + pClass+"\nSpecies: "+species+"\nBackground: "+background+"\nStats:"+Arrays.toString(stats) +"\nLevel:"+level+"\nHP:"+hp;
+	    String[] abilities = {"Str", "Dex", "Con","Int", "Wis", "Cha"};
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("Character Details\n");
+	    sb.append("-----------------\n");
+	    sb.append("Name: ").append(name).append("\n");
+	    sb.append("Class: ").append(pClass).append("\n");
+	    sb.append("Species: ").append(species).append("\n");
+	    sb.append("Background: ").append(background).append("\n");
+	    sb.append("Level: ").append(level).append("\n");
+	    sb.append("HP: ").append(hp).append("\n\n");
+	    sb.append("Ability Scores\n");
+	    
+	    for (int i = 0; i < stats.length; i++) {
+	        int mod = abilityModifier(stats[i]);
+	        sb.append(String.format(
+	            "%s: %d (%+d)%n",
+	            abilities[i], stats[i], mod
+	        ));
+	    }
+
+	    return sb.toString();
 	}
 	
 	public static int readInt(String input, int min, int max) {
