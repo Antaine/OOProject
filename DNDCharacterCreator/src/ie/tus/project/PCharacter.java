@@ -29,7 +29,7 @@ import ie.tus.project.Classes;
 	        }
 	    }
 	    stats = Arrays.copyOf(stats, stats.length);
-	    level =1;
+	   // level =1;
 	    int conMod = (stats[2]-10)/2;
 	    hp = pClass.hitDie() + conMod;
 	}

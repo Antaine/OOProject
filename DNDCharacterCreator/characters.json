@@ -1,8 +1,10 @@
 [
 {
-  "name": "TEts",
-  "class": "Barbarian",
-  "species": "AASIMAR",
+  "name": "Adventurer",
+  "class": "Fighter",
+  "species": "HUMAN",
   "background": "ACOLYTE",
-  "stats": [20,14,16,10,11,10]
+  "level": "2",
+  "hp": "10",
+  "stats": [10,10,10,10,10,10]
 }

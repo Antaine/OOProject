@@ -89,7 +89,9 @@ private void selectCharacter() {
 	 System.out.println("Would you like to edit this character? (Y/N)");
 	 String edit = IO.readln().trim().toUpperCase();
 	 if (edit.equals("Y")) {
-	        //editCharacter(selectedCharacter);  
+	       PCharacter editedCharacter = editCharacter(selectedCharacter);
+	       characters.set(input-1, editedCharacter);
+	       System.out.println("Character updated successfully");
 	    } else {
 	        System.out.println("Character selection complete.");
 	    }
@@ -106,6 +108,144 @@ public void displayAssignedStats(int[] assignedStats) {
     }
 }
 
+private PCharacter editCharacter(PCharacter originalCharacter) {
+	Classes newClass =originalCharacter.pClass();
+	Species newSpecies =originalCharacter.species();
+	Background newBackground = originalCharacter.background();
+	int newLevel = originalCharacter.level();
+	
+	int selected;
+	 do{
+		 System.out.println("\n--- Edit Character ---");
+	     System.out.println("1. Change Class");
+	     System.out.println("2. Change Species");
+	     System.out.println("3. Change Background");
+	     System.out.println("4. Change Level");
+	     System.out.println("5. Edit Ability Scores");
+	     System.out.println("0. Finish Editing");
+
+	     selected = readInt("Select an option:", 0, 5);
+	     
+	     switch (selected) {
+         case 1 -> newClass = setClass();
+         case 2 -> newSpecies = setSpecies();
+         case 3 -> newBackground = setBackground();
+         case 4 -> {newLevel = readInt("Enter new level (1–3):", 1, 3);}
+         case 5 -> originalCharacter = editStats(originalCharacter);
+         case 0 -> System.out.println("Finishing edit...");
+     }
+
+	}while(selected !=0);
+	 
+	 return new PCharacter(originalCharacter.name(),
+			 newClass,newSpecies,newBackground,originalCharacter.stats(),newLevel,originalCharacter.hp());
+
+}
+
+private PCharacter editStats(PCharacter pc) {
+    int[] stats = pc.stats(); // defensive copy already
+    int points = 3;
+
+    String[] abilities = {
+        "Strength", "Dexterity", "Constitution",
+        "Intelligence", "Wisdom", "Charisma"
+    };
+
+    while (points > 0) {
+        System.out.println("\nCurrent Stats (Points left: " + points + ")");
+        for (int i = 0; i < stats.length; i++) {
+            int mod = (stats[i] - 10) / 2;
+            System.out.printf(
+                "%d. %-13s : %2d (%+d)%n",
+                i + 1, abilities[i], stats[i], mod
+            );
+        }
+
+        int choice = readInt(
+            "Select a stat to increase (1–6) or 0 to finish:",
+            0, 6
+        );
+
+        if (choice == 0) break;
+
+        int index = choice - 1;
+
+        if (stats[index] >= 20) {
+            System.out.println("That stat is already at 20.");
+            continue;
+        }
+
+        while (true) {
+            System.out.println("\nAbility Scores (Adjustment points: " + points + ")");
+            for (int i = 0; i < stats.length; i++) {
+                int mod = (stats[i] - 10) / 2;
+                System.out.printf(
+                    "%d. %-13s : %2d (%+d)%n",
+                    i + 1, abilities[i], stats[i], mod
+                );
+            }
+
+            System.out.println(
+                "\nSelect stat to modify:\n" +"1–6 = increase stat by 1\n" +"-1 to -6 = decrease stat by 1\n" +"0 = finish editing"
+            );
+
+            int input;
+            try {
+                input = Integer.parseInt(IO.readln().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input.");
+                continue;
+            }
+
+            if (input == 0) break;
+
+            int index1 = Math.abs(input) - 1;
+            int delta = input > 0 ? 1 : -1;
+
+            if (index1 < 0 || index1 >= 6) {
+                System.out.println("Invalid stat selection.");
+                continue;
+            }
+
+            int newValue = stats[index1] + delta;
+
+            if (newValue < 3 || newValue > 20) {
+                System.out.println("Stat must remain between 3 and 20.");
+                continue;
+            }
+
+            if (delta > 0 && points < 1) {
+                System.out.println("No points remaining.");
+                continue;
+            }
+
+            stats[index1] = newValue;
+            points -= delta;
+
+            System.out.println(
+                abilities[index1] + " updated to " +
+                stats[index1] + " (Points left: " + points + ")"
+            );
+        }}
+    int conMod = (stats[2] - 10) / 2;
+    int newHp = Math.max(
+        1,
+        pc.pClass().hitDie()
+        + (pc.level() - 1) * (pc.pClass().hitDie() / 2 + 1)
+        + conMod * pc.level()
+    );
+
+
+    return new PCharacter(
+        pc.name(),
+        pc.pClass(),
+        pc.species(),
+        pc.background(),
+        stats,
+        pc.level(),
+        newHp
+    );
+}
 
 //Create Character
 public void createCharacter() {
@@ -285,6 +425,8 @@ public String toJson(PCharacter pc) {
     sb.append("  \"class\": \"").append(pc.pClass()).append("\",\n");
     sb.append("  \"species\": \"").append(pc.species()).append("\",\n");
     sb.append("  \"background\": \"").append(pc.background()).append("\",\n");
+    sb.append("  \"level\": \"").append(pc.level()).append("\",\n");
+    sb.append("  \"hp\": \"").append(pc.hp()).append("\",\n");
     sb.append("  \"stats\": [");
     for(int i =0; i<pc.stats().length;i++) {
     	sb.append(pc.stats()[i]);
@@ -350,12 +492,14 @@ public List<PCharacter> loadCharacters(){
             Classes pClass = Classes.valueOf(extractValue(jsonCharacter, "class"));
             Species species = Species.valueOf(extractValue(jsonCharacter, "species"));
             Background background = Background.valueOf(extractValue(jsonCharacter, "background"));
+            int level = Integer.parseInt(extractValue(jsonCharacter, "level"));
+            int hp = Integer.parseInt(extractValue(jsonCharacter, "hp"));
             String statsString = jsonCharacter.substring(jsonCharacter.indexOf('[')+1, jsonCharacter.indexOf(']'));
             int stats[] = Arrays.stream(statsString.split(","))
             		.map(String::trim)
             		.mapToInt(Integer::parseInt)
             		.toArray();
-            characters.add(new PCharacter(name, pClass, species, background, stats));
+            characters.add(new PCharacter(name, pClass, species, background, stats, level, hp));
 		}
 		
 		
