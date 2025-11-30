@@ -8,58 +8,58 @@ import ie.tus.project.Species;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Predicate;
+import ie.tus.project.AuditInfo;
 Scanner sc = new Scanner(System.in);
 private static List<PCharacter> characters = new ArrayList<>();
+
 //Main Method Compact Source File
 void main(){
 	//Variables
 	int input, sentinel =1;
-	
-	
 	IO.println("Welcome to the D&D 2024 Character Creator");
 	System.out.println("Please select an option");
 	
-	//Main Loop
+	//Main Loop - Run until 0 is selected
 	do{
-	System.out.println("1. Create Character");
-	System.out.println("2. Quick Character");
-	System.out.println("3. Display Characters");
-	System.out.println("4. Save Characters to File");
-	System.out.println("5. Load Characters from File");
-	System.out.println("6. Select Character");
-	System.out.println("7. Delete Character");
-	System.out.println("0. Exit Aplication");
-		if (sc.hasNextInt()) {
-	        input = sc.nextInt();
-	    } else {
+		System.out.println("1. Create Character");
+		System.out.println("2. Quick Character");
+		System.out.println("3. Display Characters");
+		System.out.println("4. Save Characters to File");
+		System.out.println("5. Load Characters from File");
+		System.out.println("6. Select Character");
+		System.out.println("7. Delete Character");
+		System.out.println("0. Exit Aplication");
+		//Check For Input
+		if (sc.hasNextInt()) {input = sc.nextInt();}
+		
+		else {
 	        System.out.println("Invalid input, please enter a valid number");
-	        sc.next(); // consume invalid token
+	        sc.next();
 	        continue; // restart loop
 	    }
 		
+		//Input Switch
 		switch (input) {
-	    case 1 -> createCharacter();
-	    case 2 -> createCharacter("Adventurer", Classes.Fighter, Species.HUMAN);
-	    case 3 -> displayAllCharacters();
-	    case 4 -> saveCharactersToFile();
-	    case 5 -> {
-	        characters = loadCharacters();
-	        if (characters.isEmpty())
-	            System.out.println("No Saved Characters on File");
-	        else
-	            characters.forEach(System.out::println);
-	    }
-	    case 6 -> selectCharacter();
-	    case 7 -> deleteCharacter();
-	    case 0 -> sentinel =0;
-	    default -> System.out.println("Invalid option");
-	}
+		    case 1 -> createCharacter();
+		    case 2 -> quickCharacter();
+		    case 3 -> displayAllCharacters();
+		    case 4 -> saveCharactersToFile();
+		    case 5 -> {
+		        characters = loadCharacters();
+		        if (characters.isEmpty())
+		            System.out.println("No Saved Characters on File");
+		        else
+		            characters.forEach(System.out::println);
+		    }
+		    case 6 -> selectCharacter();
+		    case 7 -> deleteCharacter();
+		    case 0 -> sentinel =0;
+		    default -> System.out.println("Invalid option");
+		}
 	}while(sentinel == 1);
-
-
-	
 }
 
+//
 private int chooseCharacterIndex(String prompt) {
     if (characters.isEmpty()) {
         System.out.println("No characters available.");
@@ -74,13 +74,14 @@ private int chooseCharacterIndex(String prompt) {
     return readInt("Enter character number:", 1, characters.size()) - 1;
 }
 
+//Display All Characters stored in Characters Array
 private void displayAllCharacters() {
-	// TODO Auto-generated method stub
+	// Check Characters Exist & Return If not
 	if(characters.isEmpty()) {
 		System.out.println("No Characters Loaded");
 		return;
 	}
-	
+	//Output Characters
 	System.out.println("Saved Characters:");
 	int i =1;
 	for(var c : characters) {
@@ -153,7 +154,9 @@ private PCharacter editCharacter(PCharacter originalCharacter) {
 	Classes newClass =originalCharacter.pClass();
 	Species newSpecies =originalCharacter.species();
 	Background newBackground = originalCharacter.background();
-	int newLevel = originalCharacter.level();
+	int newLevel = originalCharacter.getLevel();
+    int[] newStats = Arrays.copyOf(originalCharacter.getStats(), originalCharacter.getStats().length);
+
 	
 	int selected;
 	 do{
@@ -179,36 +182,25 @@ private PCharacter editCharacter(PCharacter originalCharacter) {
 	}while(selected !=0);
 	 
 	 return new PCharacter(originalCharacter.name(),
-			 newClass,newSpecies,newBackground,originalCharacter.stats(),newLevel,originalCharacter.hp(),originalCharacter.createdTime(),LocalDateTime.now());
+			 newClass,newSpecies,newBackground,originalCharacter.getStats(),newLevel,originalCharacter.getAuditInfo() );
 
 }
 
 private PCharacter editStats(PCharacter pc) {
-    int[] stats = pc.stats(); // defensive copy already
+    int[] stats = Arrays.copyOf(pc.getStats(), pc.getStats().length); // defensive copy already
     int points = 3;
-
-    String[] abilities = {
-        "Strength", "Dexterity", "Constitution",
-        "Intelligence", "Wisdom", "Charisma"
-    };
+    String[] abilities = {"Strength", "Dexterity", "Constitution","Intelligence", "Wisdom", "Charisma"};
 
     while (points > 0) {
         System.out.println("\nCurrent Stats (Points left: " + points + ")");
         for (int i = 0; i < stats.length; i++) {
             int mod = (stats[i] - 10) / 2;
-            System.out.printf(
-                "%d. %-13s : %2d (%+d)%n",
-                i + 1, abilities[i], stats[i], mod
-            );
+            System.out.printf("%d. %-13s : %2d (%+d)%n",i + 1, abilities[i], stats[i], mod);
         }
 
-        int choice = readInt(
-            "Select a stat to increase (1–6) or 0 to finish:",
-            0, 6
-        );
+        int choice = readInt("Select a stat to increase (1–6) or 0 to finish:",0, 6);
         if (choice == 0) break;
         int index = choice - 1;
-        
         if (stats[index] >= 20) {
             System.out.println("That stat is already at 20.");
             continue;
@@ -222,7 +214,6 @@ private PCharacter editStats(PCharacter pc) {
             }
 
             System.out.println( "\nSelect stat to modify:\n" +"1–6 = increase stat by 1\n" +"-1 to -6 = decrease stat by 1\n" +"0 = finish editing");
-
             int input;
             try {
                 input = Integer.parseInt(IO.readln().trim());
@@ -232,17 +223,14 @@ private PCharacter editStats(PCharacter pc) {
             }
 
             if (input == 0) break;
-
             int index1 = Math.abs(input) - 1;
             int delta = input > 0 ? 1 : -1;
-
+            
             if (index1 < 0 || index1 >= 6) {
                 System.out.println("Invalid stat selection.");
                 continue;
             }
-
             int newValue = stats[index1] + delta;
-
             if (newValue < 3 || newValue > 20) {
                 System.out.println("Stat must remain between 3 and 20.");
                 continue;
@@ -255,18 +243,15 @@ private PCharacter editStats(PCharacter pc) {
 
             stats[index1] = newValue;
             points -= delta;
-
-            System.out.println(
-                abilities[index1] + " updated to " +
-                stats[index1] + " (Points left: " + points + ")"
-            );
+            
+            System.out.println(abilities[index1] + " updated to " +stats[index1] + " (Points left: " + points + ")");
         }}
     int conMod = (stats[2] - 10) / 2;
     int newHp = Math.max(
         1,
         pc.pClass().hitDie()
-        + (pc.level() - 1) * (pc.pClass().hitDie() / 2 + 1)
-        + conMod * pc.level()
+        + (pc.getLevel() - 1) * (pc.pClass().hitDie() / 2 + 1)
+        + conMod * pc.getLevel()
     );
 
 
@@ -276,33 +261,34 @@ private PCharacter editStats(PCharacter pc) {
         pc.species(),
         pc.background(),
         stats,
-        pc.level(),
+     //   pc.getLevel(),
         newHp,
-        pc.createdTime(),
-        LocalDateTime.now()
+        AuditInfo.createNew()
     );
 }
 
 //Create Character
 public void createCharacter() {
-//	String name;
-//	Classes pClass;
-//	Species species;
-//	Background background;
-	//Enter Character Details
-	var name=setName();
+	var name = setName();
 	var pClass = setClass();
 	var species = setSpecies();
 	var background = setBackground();
-	var stats = rollStatsWithReroll();
-	int[] abilityScores = assignStatsToAbilities(stats);
+	var rolledStats = rollStatsWithReroll();
+	int[] abilityScores = assignStatsToAbilities(rolledStats);
 	abilityScoreImprovements(abilityScores);
 	displayAssignedStats(abilityScores);
-	var  playerCharacter = new PCharacter(name, pClass, species, background, abilityScores);
+	PCharacter playerCharacter = new PCharacter(
+			name,
+	        pClass,
+	        species,
+	        background,
+	        abilityScores,
+	        1,                     
+	        AuditInfo.createNew()
+	        );
 	displayCharacter(playerCharacter);
 	characters.add(playerCharacter);
 	System.out.println("Character saved!\n");
-	//Display Classes from Classes Enum
 	
 }
 
@@ -362,11 +348,50 @@ private void abilityScoreImprovements(int[] stats) {
 
 }
 
-public void createCharacter(String name, Classes pClass, Species species) {
+/*public void createCharacter(String name, Classes pClass, Species species) {
+	String name = setName();
+	var  pClass = setClass();
+	Species species = setSpecies();
+	var background = setBackground();
+
+	// 2. Roll and assign stats
+	var stats = rollStatsWithReroll();
+	int[] abilityScores = assignStatsToAbilities(stats);
+
+	// 3. Apply ability score improvements
+	abilityScoreImprovements(abilityScores);
+
+	// 4. Display assigned stats
+	displayAssignedStats(abilityScores);
+
     var playerCharacter = new PCharacter(name, pClass, species);
     displayCharacter(playerCharacter);
     characters.add(playerCharacter);
 	System.out.println("Quick Character saved!\n");
+}*/
+
+public void createCharacter(String name, Classes pClass, Species species) {
+
+    name = setName();
+    pClass = setClass();
+    species = setSpecies();
+    Background background = setBackground();
+
+    // Roll and assign stats
+    int[] stats = rollStatsWithReroll();
+    int[] abilityScores = assignStatsToAbilities(stats);
+
+    abilityScoreImprovements(abilityScores);
+    displayAssignedStats(abilityScores);
+
+    // ✅ AuditInfo created internally
+    PCharacter playerCharacter =
+            new PCharacter(name, pClass, species, background, abilityScores);
+
+    displayCharacter(playerCharacter);
+    characters.add(playerCharacter);
+
+    System.out.println("Character saved!\n");
 }
 
 public String setName() {
@@ -467,19 +492,22 @@ public String toJson(PCharacter pc) {
 	sb.append("  \"class\": \"").append(pc.pClass().name()).append("\",\n");
 	sb.append("  \"species\": \"").append(pc.species().name()).append("\",\n");
 	sb.append("  \"background\": \"").append(pc.background().name()).append("\",\n");
-    sb.append("  \"level\": \"").append(pc.level()).append("\",\n");
-    sb.append("  \"hp\": \"").append(pc.hp()).append("\",\n");
+    sb.append("  \"level\": \"").append(pc.getLevel()).append("\",\n");
+    sb.append("  \"hp\": \"").append(pc.getHp()).append("\",\n");
     sb.append("  \"stats\": [");
-    for(int i =0; i<pc.stats().length;i++) {
-    	sb.append(pc.stats()[i]);
-    	if(i<pc.stats().length -1) sb.append(",");
     
-    }
-	sb.append("],\n");
-    sb.append("  \"createdTime\": \"").append(pc.createdTime()).append("\",\n");
-    sb.append("  \"lastEdited\": \"").append(pc.lastEdited()).append("\"\n");
-	sb.append("}\n");
-	return sb.toString();
+    int[] stats = pc.getStats();
+    for (int i = 0; i < stats.length; i++) {
+        sb.append(stats[i]);
+        if (i < stats.length - 1) sb.append(", ");
+    }sb.append("],\n");
+    sb.append("  \"auditInfo\": {\n");
+    sb.append("    \"createdTime\": \"").append(pc.getAuditInfo().getCreated()).append("\",\n");
+    sb.append("    \"lastEdited\": \"").append(pc.getAuditInfo().getLastEdited()).append("\"\n");
+    sb.append("  }\n");
+    sb.append("}\n");
+
+    return sb.toString();
 }
 
 public void saveCharactersToFile() {
@@ -506,17 +534,6 @@ public static int sum(int... values) {
     return Arrays.stream(values).sum();
 }
 
-/*public static void checkFileCharacters() {
-	File characterFile = new File("characters.json");
-	
-	if(!characterFile.exists()) {
-		System.out.println("No saved characters file found.");
-		return;
-	}
-	
-	List<PCharacter> loaded = load
-}*/
-
 public List<PCharacter> loadCharacters(){
 	var characters = new ArrayList<PCharacter>();
 	try {
@@ -529,8 +546,8 @@ public List<PCharacter> loadCharacters(){
 		//Empty
 		if(rawCharacters.equals("[]")) return characters;
 		
-		rawCharacters = rawCharacters.substring(1,rawCharacters.length()-1);
-		var entries = rawCharacters.split("\\},\\s*\\{");
+		rawCharacters = rawCharacters.substring(1,rawCharacters.length()-1).trim();
+		var entries = rawCharacters.split("\\}\\s*,\\s*\\{");
 		
 		for(int i =0; i< entries.length; i++) {
 			var jsonCharacter = entries[i];
@@ -544,12 +561,14 @@ public List<PCharacter> loadCharacters(){
             int hp = Integer.parseInt(extractValue(jsonCharacter, "hp"));
             LocalDateTime createdTime = LocalDateTime.parse(extractValue(jsonCharacter, "createdTime"));
             LocalDateTime lastEdited = LocalDateTime.parse(extractValue(jsonCharacter, "lastEdited"));
+            AuditInfo auditInfo = new AuditInfo(createdTime, lastEdited);
             String statsString = jsonCharacter.substring(jsonCharacter.indexOf('[')+1, jsonCharacter.indexOf(']'));
             int stats[] = Arrays.stream(statsString.split(","))
             		.map(String::trim)
             		.mapToInt(Integer::parseInt)
             		.toArray();
-            characters.add(new PCharacter(name, pClass, species, background, stats, level, hp,createdTime,lastEdited));
+            characters.add(new PCharacter(name, pClass, species, background, stats, level, auditInfo));
+
 		}
 		
 		
@@ -645,4 +664,10 @@ public static int readInt(String input, int min, int max) {
         }
     } while(true);
 }
-
+//Create Quick Template Character
+public void quickCharacter() {
+    PCharacter playerCharacter = new PCharacter( "Adventurer",Classes.Fighter,Species.HUMAN);
+    displayCharacter(playerCharacter);
+    characters.add(playerCharacter);
+    System.out.println("Quick Character saved!\n");
+}

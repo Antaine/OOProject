@@ -1,6 +1,6 @@
 package ie.tus.project;
 
-public sealed interface Describable permits PCharacter {
+public sealed interface Describable permits PCharacter, CharacterBase {
 	String description();
 	
 	 default String shortDescription() {

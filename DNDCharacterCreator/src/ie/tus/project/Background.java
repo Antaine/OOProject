@@ -1,5 +1,6 @@
 package ie.tus.project;
 
+//Available Backgrounds
 public enum Background {
 	ACOLYTE,
     ARTISAN,

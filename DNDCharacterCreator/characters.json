@@ -1,2 +1,29 @@
 [
+{
+  "name": "A",
+  "class": "Monk",
+  "species": "DRAGONBORN",
+  "background": "MERCHANT",
+  "level": "2",
+  "hp": "12",
+  "stats": [20, 13, 17, 11, 11, 17],
+  "auditInfo": {
+    "createdTime": "2025-11-30T21:58:37.638353100",
+    "lastEdited": "2025-11-30T21:58:37.638353100"
+  }
+}
+,
+{
+  "name": "T",
+  "class": "Barbarian",
+  "species": "AASIMAR",
+  "background": "ACOLYTE",
+  "level": "1",
+  "hp": "14",
+  "stats": [13, 9, 15, 12, 15, 13],
+  "auditInfo": {
+    "createdTime": "2025-11-30T22:06:10.072236900",
+    "lastEdited": "2025-11-30T22:06:10.072236900"
+  }
+}
 
