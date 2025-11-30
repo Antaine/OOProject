@@ -1,25 +1,2 @@
 [
-{
-  "name": "At",
-  "class": "Barbarian",
-  "species": "AASIMAR",
-  "background": "ACOLYTE",
-  "level": "1",
-  "hp": "13",
-  "stats": [15,18,13,13,14,8],
-  "createdTime": "2025-11-30T13:54:25.179364600",
-  "lastEdited": "2025-11-30T13:54:25.181357500"
-}
-,
-{
-  "name": "Adventurer",
-  "class": "Fighter",
-  "species": "HUMAN",
-  "background": "ACOLYTE",
-  "level": "0",
-  "hp": "10",
-  "stats": [10,10,10,10,10,10],
-  "createdTime": "2025-11-30T13:55:29.342250100",
-  "lastEdited": "2025-11-30T13:55:29.342250100"
-}
 

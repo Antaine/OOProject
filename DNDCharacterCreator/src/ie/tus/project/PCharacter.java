@@ -168,6 +168,7 @@ import ie.tus.project.Classes;
 		return pClass.hitDie() + conModifier;
 	}
 	
+
 	
 	public void levelUp() {}
 

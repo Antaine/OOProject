@@ -1,4 +1,5 @@
 import java.nio.channels.SelectableChannel;
+import java.util.Arrays;
 import java.util.Scanner;
 import ie.tus.project.PCharacter;
 import ie.tus.project.Background;
@@ -26,6 +27,7 @@ void main(){
 	System.out.println("4. Save Characters to File");
 	System.out.println("5. Load Characters from File");
 	System.out.println("6. Select Character");
+	System.out.println("7. Delete Character");
 	System.out.println("0. Exit Aplication");
 		if (sc.hasNextInt()) {
 	        input = sc.nextInt();
@@ -48,6 +50,7 @@ void main(){
 	            characters.forEach(System.out::println);
 	    }
 	    case 6 -> selectCharacter();
+	    case 7 -> deleteCharacter();
 	    case 0 -> sentinel =0;
 	    default -> System.out.println("Invalid option");
 	}
@@ -55,6 +58,20 @@ void main(){
 
 
 	
+}
+
+private int chooseCharacterIndex(String prompt) {
+    if (characters.isEmpty()) {
+        System.out.println("No characters available.");
+        return -1;
+    }
+
+    System.out.println(prompt);
+    for (int i = 0; i < characters.size(); i++) {
+        System.out.printf("%d. %s%n", i + 1, characters.get(i).getName());
+    }
+
+    return readInt("Enter character number:", 1, characters.size()) - 1;
 }
 
 private void displayAllCharacters() {
@@ -73,31 +90,53 @@ private void displayAllCharacters() {
 }
 
 private void selectCharacter() {
-	if (characters.isEmpty()) {
-        System.out.println("No characters available to select.");
+    int index = chooseCharacterIndex("Select a Character:");
+    if (index == -1) return;
+
+    PCharacter selectedCharacter = characters.get(index);
+
+    System.out.println("\n--- Character Description ---");
+    System.out.println(selectedCharacter.description());
+
+    System.out.println("Is this the correct character? (Y/N)");
+    String confirm = IO.readln().trim().toUpperCase();
+    if (!confirm.equals("Y")) {
+        System.out.println("Selection cancelled.");
         return;
     }
-	System.out.println("Select a Character:");
-	 for (int i = 0; i < characters.size(); i++) 
-	 {System.out.printf("%d. %s%n", i + 1, characters.get(i).getName());}
-	 int input = readInt("Enter character number:", 1, characters.size());
-	 PCharacter selectedCharacter = characters.get(input - 1);
-	 System.out.println("\n--- Character Description ---");
-	 System.out.println(selectedCharacter.description());
-	 System.out.println("Is this the correct character? (Y/N)");
-	 String confirm = IO.readln().trim().toUpperCase();
-	 if (!confirm.equals("Y")) {System.out.println("Selection cancelled.");return;}
-	 
-	 System.out.println("Would you like to edit this character? (Y/N)");
-	 String edit = IO.readln().trim().toUpperCase();
-	 if (edit.equals("Y")) {
-	       PCharacter editedCharacter = editCharacter(selectedCharacter);
-	       characters.set(input-1, editedCharacter);
-	       System.out.println("Character updated successfully");
-	    } else {
-	        System.out.println("Character selection complete.");
-	    }
+
+    System.out.println("Would you like to edit this character? (Y/N)");
+    String edit = IO.readln().trim().toUpperCase();
+    if (edit.equals("Y")) {
+        PCharacter editedCharacter = editCharacter(selectedCharacter);
+        characters.set(index, editedCharacter);
+        saveCharactersToFile();
+        System.out.println("Character updated successfully.");
+    }
 }
+
+private void deleteCharacter() {
+    int index = chooseCharacterIndex("Select a Character to Delete:");
+    if (index == -1) return;
+
+    PCharacter selected = characters.get(index);
+
+    System.out.println(
+        "Are you sure you want to delete " + selected.getName() + "? (Y/N)"
+    );
+
+    String confirm = IO.readln().trim().toUpperCase();
+    if (!confirm.equals("Y")) {
+        System.out.println("Deletion cancelled.");
+        return;
+    }
+
+    characters.remove(index);
+    saveCharactersToFile();
+
+    System.out.println("Character deleted successfully.");
+}
+
 
 public void displayAssignedStats(int[] assignedStats) {
     String[] abilities = {"Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"};
@@ -167,29 +206,22 @@ private PCharacter editStats(PCharacter pc) {
             "Select a stat to increase (1–6) or 0 to finish:",
             0, 6
         );
-
         if (choice == 0) break;
-
         int index = choice - 1;
-
+        
         if (stats[index] >= 20) {
             System.out.println("That stat is already at 20.");
             continue;
         }
-
+        
         while (true) {
-            System.out.println("\nAbility Scores (Adjustment points: " + points + ")");
-            for (int i = 0; i < stats.length; i++) {
-                int mod = (stats[i] - 10) / 2;
-                System.out.printf(
-                    "%d. %-13s : %2d (%+d)%n",
-                    i + 1, abilities[i], stats[i], mod
-                );
+        	System.out.println("\nAbility Scores (Adjustment points: " + points + ")");
+            for(int i = 0; i < stats.length; i++) {
+            	int mod = (stats[i] - 10) / 2;
+                System.out.printf("%d. %-13s : %2d (%+d)%n",i + 1, abilities[i], stats[i], mod);
             }
 
-            System.out.println(
-                "\nSelect stat to modify:\n" +"1–6 = increase stat by 1\n" +"-1 to -6 = decrease stat by 1\n" +"0 = finish editing"
-            );
+            System.out.println( "\nSelect stat to modify:\n" +"1–6 = increase stat by 1\n" +"-1 to -6 = decrease stat by 1\n" +"0 = finish editing");
 
             int input;
             try {
@@ -280,10 +312,12 @@ private void abilityScoreImprovements(int[] stats) {
 	int improvementPoints =3;
     System.out.println("\nAbility Score Improvements");
     System.out.println("You can spend up to 3 points.(Max of 20)");
-    
+    int totalAbilityScore = sum(stats);
+    int maxSpend =3;
   while(improvementPoints >0) {
     	while (improvementPoints > 0) {
             displayAssignedStats(stats);
+            System.out.println("Updated total ability score: " + totalAbilityScore);
             System.out.println("Points remaining: " + improvementPoints);
 
             int choice = -1;
@@ -301,7 +335,7 @@ private void abilityScoreImprovements(int[] stats) {
                 continue;
             }
 
-            int maxSpend = Math.min(improvementPoints, 20 - stats[choice]);
+           maxSpend = Math.min(improvementPoints, 20 - stats[choice]);
 
             int spend;
             do {
@@ -316,9 +350,13 @@ private void abilityScoreImprovements(int[] stats) {
             System.out.println(
                 abilities[choice] + " increased to " + stats[choice]
             );
+            totalAbilityScore = sum(stats);  // varargs usage
+            System.out.println("Updated total ability score: " + totalAbilityScore);
         }
 
         System.out.println("Ability Score Improvements complete.\n");
+        totalAbilityScore = sum(stats);  // varargs usage
+        System.out.println("Updated total ability score: " + totalAbilityScore);
     }
     
 
@@ -462,6 +500,10 @@ public void saveCharactersToFile() {
 	} catch(Exception e) {
 		System.out.println("Error saving characters: "+e.getMessage());
 	}
+}
+
+public static int sum(int... values) {
+    return Arrays.stream(values).sum();
 }
 
 /*public static void checkFileCharacters() {
