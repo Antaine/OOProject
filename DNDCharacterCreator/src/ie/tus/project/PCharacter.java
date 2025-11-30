@@ -1,11 +1,12 @@
 package ie.tus.project;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Scanner;
 import ie.tus.project.Classes;
 //Fiels are final and private automatically
- public record PCharacter(String name, Classes pClass, Species species, Background background, int[] stats,int  level, int hp) implements Describable   {
+ public record PCharacter(String name, Classes pClass, Species species, Background background, int[] stats,int  level, int hp, LocalDateTime createdTime,LocalDateTime lastEdited) implements Describable   {
 	
 //	private String name;
 //	private Species species;
@@ -28,21 +29,28 @@ import ie.tus.project.Classes;
 	            throw new IllegalArgumentException("Each stat must be between 3 and 20: " + Arrays.toString(stats));
 	        }
 	    }
+	    if (createdTime == null) {
+	    	createdTime = LocalDateTime.now();
+	    }
+	    if (lastEdited == null) {
+	        lastEdited = createdTime;
+	    }
 	    stats = Arrays.copyOf(stats, stats.length);
 	   // level =1;
 	    int conMod = (stats[2]-10)/2;
 	    hp = pClass.hitDie() + conMod;
+	    LocalDateTime createdAt;
+	    LocalDateTime lastEditedAt;
+
 	}
 	
-    public PCharacter(String name, Classes pClass,
-            Species species, Background background,
-            int[] stats) {
-
-this(name,pClass,species,background,Arrays.copyOf(stats, stats.length),1,Math.max(1, pClass.hitDie() +(stats[2] - 10) / 2));}
+    public PCharacter(String name, Classes pClass,Species species, Background background,int[] stats) {
+    	
+    	this(name,pClass,species,background,Arrays.copyOf(stats, stats.length),1,Math.max(1, pClass.hitDie() +(stats[2] - 10) / 2),LocalDateTime.now(),LocalDateTime.now());}
 	
 	// Overloaded constructor with default background
     public PCharacter(String name, Classes pClass, Species species) {
-        this(name, pClass, species, Background.ACOLYTE, new int[]{10,10,10,10,10,10},0,0); // choose default
+        this(name, pClass, species, Background.ACOLYTE, new int[]{10,10,10,10,10,10},0,0,LocalDateTime.now(),LocalDateTime.now());
     }
 	//Object Ability Score Improvements
 	//Abstract Level up
@@ -52,6 +60,9 @@ this(name,pClass,species,background,Arrays.copyOf(stats, stats.length),1,Math.ma
 /*	PCharacter(String name){
 		this.name = name;
 	}*/
+    
+    private static final DateTimeFormatter FORMATTER =DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
+
     
     public static int abilityModifier(int abilityScore) {
     	return (abilityScore-10)/2 ;
@@ -126,6 +137,9 @@ this(name,pClass,species,background,Arrays.copyOf(stats, stats.length),1,Math.ma
 	            abilities[i], stats[i], mod
 	        ));
 	    }
+	    sb.append("Created:     ").append(createdTime).append("\n");
+	    sb.append("Last Edited: ").append(lastEdited).append("\n");
+
 
 	    return sb.toString();
 	}

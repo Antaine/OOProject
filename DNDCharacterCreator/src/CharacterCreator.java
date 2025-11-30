@@ -4,6 +4,8 @@ import ie.tus.project.PCharacter;
 import ie.tus.project.Background;
 import ie.tus.project.Classes;
 import ie.tus.project.Species;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.function.Predicate;
 Scanner sc = new Scanner(System.in);
 private static List<PCharacter> characters = new ArrayList<>();
@@ -138,7 +140,7 @@ private PCharacter editCharacter(PCharacter originalCharacter) {
 	}while(selected !=0);
 	 
 	 return new PCharacter(originalCharacter.name(),
-			 newClass,newSpecies,newBackground,originalCharacter.stats(),newLevel,originalCharacter.hp());
+			 newClass,newSpecies,newBackground,originalCharacter.stats(),newLevel,originalCharacter.hp(),originalCharacter.createdTime(),LocalDateTime.now());
 
 }
 
@@ -243,7 +245,9 @@ private PCharacter editStats(PCharacter pc) {
         pc.background(),
         stats,
         pc.level(),
-        newHp
+        newHp,
+        pc.createdTime(),
+        LocalDateTime.now()
     );
 }
 
@@ -422,9 +426,9 @@ public String toJson(PCharacter pc) {
 	StringBuilder sb = new StringBuilder();
 	sb.append("{\n");
 	sb.append("  \"name\": \"").append(pc.name()).append("\",\n");
-    sb.append("  \"class\": \"").append(pc.pClass()).append("\",\n");
-    sb.append("  \"species\": \"").append(pc.species()).append("\",\n");
-    sb.append("  \"background\": \"").append(pc.background()).append("\",\n");
+	sb.append("  \"class\": \"").append(pc.pClass().name()).append("\",\n");
+	sb.append("  \"species\": \"").append(pc.species().name()).append("\",\n");
+	sb.append("  \"background\": \"").append(pc.background().name()).append("\",\n");
     sb.append("  \"level\": \"").append(pc.level()).append("\",\n");
     sb.append("  \"hp\": \"").append(pc.hp()).append("\",\n");
     sb.append("  \"stats\": [");
@@ -433,8 +437,10 @@ public String toJson(PCharacter pc) {
     	if(i<pc.stats().length -1) sb.append(",");
     
     }
-	sb.append("]\n");
-	sb.append("}");
+	sb.append("],\n");
+    sb.append("  \"createdTime\": \"").append(pc.createdTime()).append("\",\n");
+    sb.append("  \"lastEdited\": \"").append(pc.lastEdited()).append("\"\n");
+	sb.append("}\n");
 	return sb.toString();
 }
 
@@ -494,12 +500,14 @@ public List<PCharacter> loadCharacters(){
             Background background = Background.valueOf(extractValue(jsonCharacter, "background"));
             int level = Integer.parseInt(extractValue(jsonCharacter, "level"));
             int hp = Integer.parseInt(extractValue(jsonCharacter, "hp"));
+            LocalDateTime createdTime = LocalDateTime.parse(extractValue(jsonCharacter, "createdTime"));
+            LocalDateTime lastEdited = LocalDateTime.parse(extractValue(jsonCharacter, "lastEdited"));
             String statsString = jsonCharacter.substring(jsonCharacter.indexOf('[')+1, jsonCharacter.indexOf(']'));
             int stats[] = Arrays.stream(statsString.split(","))
             		.map(String::trim)
             		.mapToInt(Integer::parseInt)
             		.toArray();
-            characters.add(new PCharacter(name, pClass, species, background, stats, level, hp));
+            characters.add(new PCharacter(name, pClass, species, background, stats, level, hp,createdTime,lastEdited));
 		}
 		
 		
