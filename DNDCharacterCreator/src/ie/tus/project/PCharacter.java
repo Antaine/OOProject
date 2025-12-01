@@ -66,32 +66,33 @@ public final class PCharacter extends CharacterBase implements Describable {
 	public Species getSpecies() {return species;}
 	public Background getBackground() {return background;}
     
+	//Set Character Name
 	private String setName() {
 		IO.println("Enter Character Name");
 		return IO.readln();
 	}
-	
+	//Set Character Class
 	private Classes setClass() {
 		var classNumber = readInt("Select Class:",1,Classes.values().length);
 		var selected = Classes.values()[classNumber-1];
 		IO.println("Class Selected "+selected);
 		return selected;
 	}
-	
+	//Set Character Species
 	private Species setSpecies() {
 		var speciesNumber = readInt("Select Species:",1,Species.values().length);
 		var selected = Species.values()[speciesNumber-1];
 		IO.println("Species Selected "+selected);
 		return selected;
 	}
-	
+	//Background
 	private Background setBackground() {
 		var backgroundNumber = readInt("Select Background:",1,Background.values().length);
 		var selected = Background.values()[backgroundNumber-1];
 		IO.println("Background Selected "+selected);
 		return selected;
 	}
-	
+	//Calculate Hit Points
     @Override
     protected void calculateHP() {
         int conMod = (stats[2] - 10) / 2;
@@ -100,7 +101,7 @@ public final class PCharacter extends CharacterBase implements Describable {
     
 	//Calculate Ability Score Modifier
     public static int abilityModifier(int abilityScore) {return (abilityScore-10)/2 ;}
-    
+    //Format Dates
     private static final DateTimeFormatter FORMATTER =DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
 	
 	@Override
@@ -120,11 +121,9 @@ public final class PCharacter extends CharacterBase implements Describable {
 	    
 	    //Stat Array
 	    for (int i = 0; i < stats.length; i++) {
+	    	//Calculate Stat Modifier
 	        int mod = abilityModifier(stats[i]);
-	        sb.append(String.format(
-	            "%s: %d (%+d)%n",
-	            abilities[i], stats[i], mod
-	        ));
+	        sb.append(String.format("%s: %d (%+d)%n",abilities[i], stats[i], mod));
 	    }
 	    //Audit Info - Time Created & Time Last Edited
 	    sb.append("Created:     ").append(auditInfo.createNew()).append("\n");

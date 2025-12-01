@@ -12,13 +12,13 @@ public class AuditInfo {
         this.lastEdited = lastEdited;
     }
 
-    // Factory method to create new AuditInfo for a newly created character
+    // Factory method to create new AuditInfo for new character
     public static AuditInfo createNew() {
         LocalDateTime now = LocalDateTime.now();
         return new AuditInfo(now, now);
     }
 
-    // Factory method to update lastEdited
+    // Factory method to update lastEdited when character is edited
     public AuditInfo update() {
         return new AuditInfo(this.created, LocalDateTime.now());
     }
@@ -28,7 +28,5 @@ public class AuditInfo {
     public LocalDateTime getLastEdited() { return lastEdited; }
 
     @Override
-    public String toString() {
-        return "Created: " + created + ", Last Edited: " + lastEdited;
-    }
+    public String toString() {return "Created: " + created + ", Last Edited: " + lastEdited;}
 }
