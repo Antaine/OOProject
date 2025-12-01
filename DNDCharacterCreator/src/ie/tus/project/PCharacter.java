@@ -126,8 +126,8 @@ public final class PCharacter extends CharacterBase implements Describable {
 	        sb.append(String.format("%s: %d (%+d)%n",abilities[i], stats[i], mod));
 	    }
 	    //Audit Info - Time Created & Time Last Edited
-	    sb.append("Created:     ").append(auditInfo.createNew()).append("\n");
-	    sb.append("Last Edited: ").append(auditInfo.getLastEdited()).append("\n");
+	    sb.append("Created:     ").append(auditInfo.created()).append("\n");
+	    sb.append("Last Edited: ").append(auditInfo.lastEdited()).append("\n");
 	    return sb.toString();
 	}
 	

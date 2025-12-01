@@ -179,10 +179,11 @@ private PCharacter editCharacter(PCharacter originalCharacter) {
      }
 
 	}while(selected !=0);
-	 
+	 LocalDateTime.now();
+	 AuditInfo updatedAudit = originalCharacter.getAuditInfo().update();
 	 //Return Edited Character
 	 return new PCharacter(originalCharacter.name(),
-			 newClass,newSpecies,newBackground,originalCharacter.getStats(),newLevel,originalCharacter.getAuditInfo() );
+			 newClass,newSpecies,newBackground,originalCharacter.getStats(),newLevel,updatedAudit);
 
 }
 
@@ -264,9 +265,9 @@ private PCharacter editStats(PCharacter pc) {
     //Recalculate HP
     int conMod = (stats[2] - 10) / 2;
     int newHp = Math.max(1,pc.pClass().hitDie()+ (pc.getLevel() - 1) * (pc.pClass().hitDie() / 2 + 1)+ conMod * pc.getLevel());
-
+	 AuditInfo updatedAudit = pc.getAuditInfo().update();
     //Return Edited Character
-    return new PCharacter(pc.name(),pc.pClass(),pc.species(),pc.background(),stats,newHp,AuditInfo.createNew());
+    return new PCharacter(pc.name(),pc.pClass(),pc.species(),pc.background(),stats,newHp,updatedAudit);
 }
 
 //Create Character
@@ -283,7 +284,7 @@ public void createCharacter() {
 	//Display New Scores
 	displayAssignedStats(abilityScores);
 	//Add Character
-	PCharacter playerCharacter = new PCharacter(name,pClass,species,background,abilityScores,1,                     AuditInfo.createNew());
+	PCharacter playerCharacter = new PCharacter(name,pClass,species,background,abilityScores,1,AuditInfo.createNew());
 	displayCharacter(playerCharacter);
 	characters.add(playerCharacter);
 	System.out.println("Character saved!\n");
@@ -491,8 +492,8 @@ public String toJson(PCharacter pc) {
     //End of Stats
     //TimeStamp
     sb.append("  \"auditInfo\": {\n");
-    sb.append("    \"createdTime\": \"").append(pc.getAuditInfo().getCreated()).append("\",\n");
-    sb.append("    \"lastEdited\": \"").append(pc.getAuditInfo().getLastEdited()).append("\"\n");
+    sb.append("    \"createdTime\": \"").append(pc.getAuditInfo().created()).append("\",\n");
+    sb.append("    \"lastEdited\": \"").append(pc.getAuditInfo().lastEdited()).append("\"\n");
     sb.append("  }\n");
     sb.append("}\n");
     return sb.toString();
