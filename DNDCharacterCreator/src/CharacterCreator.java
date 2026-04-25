@@ -11,9 +11,10 @@ import ie.tus.project.Background;
 import ie.tus.project.Classes;
 import ie.tus.project.PCharacter;
 import ie.tus.project.Species;
-
+import ie.tus.project.services.CharacterAnalyticsService;
 Scanner sc = new Scanner(System.in);
 private static List<PCharacter> characters = new ArrayList<>();
+private CharacterAnalyticsService analytics = new CharacterAnalyticsService();
 
 //Main Method Compact Source File
 void main(){
@@ -31,6 +32,7 @@ void main(){
 		System.out.println("5. Load Characters from File");
 		System.out.println("6. Select Character");
 		System.out.println("7. Delete Character");
+		System.out.println("8. Test Analytics");
 		System.out.println("0. Exit Application");
 		//Check For Input
 		if (sc.hasNextInt()) {input = sc.nextInt();}
@@ -56,6 +58,7 @@ void main(){
 		    }
 		    case 6 -> selectCharacter();
 		    case 7 -> deleteCharacter();
+		    case 8 -> testAnalytics();
 		    case 0 -> sentinel =0;
 		    default -> System.out.println("Invalid option");
 		}
@@ -92,6 +95,52 @@ private void displayAllCharacters() {
 		System.out.println("\nCharacter #"+i++);
 		System.out.println(c);
 	}
+}
+private void testAnalytics() {
+    if (characters.isEmpty()) {
+        System.out.println("No characters available. Create or load characters first.");
+        return;
+    }
+
+    System.out.println("\n--- Analytics Test ---");
+    System.out.println("Character count: " + analytics.countCharacters(characters));
+
+    System.out.println("\nNames:");
+    System.out.println(analytics.characterNames(characters));
+
+    System.out.println("\nSorted by name:");
+    analytics.sortByName(characters)
+            .forEach(c -> System.out.println(summary(c)));
+
+    System.out.println("\nGrouped by class:");
+    analytics.groupByClass(characters)
+            .forEach((pClass, list) ->
+                    System.out.println(pClass + ": " + list.size() + " character(s)")
+            );
+
+    System.out.println("\nPartitioned by level 5 or higher:");
+    analytics.partitionByLevelFiveOrHigher(characters)
+            .forEach((levelFiveOrHigher, list) ->
+                    System.out.println(
+                            (levelFiveOrHigher ? "Level 5+": "Below Level 5")
+                                    + ": " + list.size() + " character(s)"
+                    )
+            );
+
+    System.out.println("\nHighest level character:");
+    analytics.highestLevelCharacter(characters)
+            .ifPresentOrElse(
+                    c -> System.out.println(summary(c)),
+                    () -> System.out.println("No highest level character found.")
+            );
+}
+
+private String summary(PCharacter c) {
+    return c.getName()
+            + " | Class: " + c.getPClass()
+            + " | Species: " + c.getSpecies()
+            + " | Level: " + c.getLevel()
+            + " | HP: " + c.getHp();
 }
 
 private void selectCharacter() {
