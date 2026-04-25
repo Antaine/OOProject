@@ -1,10 +1,7 @@
 package ie.tus.project;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.Scanner;
-import ie.tus.project.Classes;
 //Fiels are final and private automatically
 //Player Character Class
 public final class PCharacter extends CharacterBase implements Describable {

@@ -1,15 +1,43 @@
 [
 {
-  "name": "B",
-  "class": "Cleric",
+  "name": "A",
+  "class": "Paladin",
   "species": "DRAGONBORN",
-  "background": "ARTISAN",
+  "background": "CHARLATAN",
   "level": "1",
-  "hp": "11",
-  "stats": [17, 14, 16, 8, 9, 20],
+  "hp": "13",
+  "stats": [18, 14, 16, 12, 12, 18],
   "auditInfo": {
-    "createdTime": "2025-12-01T20:21:49.139341100",
-    "lastEdited": "2025-12-01T20:36:31.636420100"
+    "createdTime": "2026-04-25T21:28:55.317250300",
+    "lastEdited": "2026-04-25T21:29:40.846587"
+  }
+}
+,
+{
+  "name": "Adventurer",
+  "class": "Fighter",
+  "species": "HUMAN",
+  "background": "ACOLYTE",
+  "level": "1",
+  "hp": "10",
+  "stats": [10, 10, 10, 10, 10, 10],
+  "auditInfo": {
+    "createdTime": "2026-04-25T21:28:57.703089400",
+    "lastEdited": "2026-04-25T21:28:57.703089400"
+  }
+}
+,
+{
+  "name": "Adventurer",
+  "class": "Fighter",
+  "species": "HUMAN",
+  "background": "ACOLYTE",
+  "level": "1",
+  "hp": "10",
+  "stats": [10, 10, 10, 10, 10, 10],
+  "auditInfo": {
+    "createdTime": "2026-04-25T21:29:01.781905800",
+    "lastEdited": "2026-04-25T21:29:01.781905800"
   }
 }
 

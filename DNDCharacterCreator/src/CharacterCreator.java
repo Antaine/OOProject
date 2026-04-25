@@ -1,14 +1,17 @@
-import java.nio.channels.SelectableChannel;
+import java.io.File;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
-import ie.tus.project.PCharacter;
-import ie.tus.project.Background;
-import ie.tus.project.Classes;
-import ie.tus.project.Species;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.function.Predicate;
 import ie.tus.project.AuditInfo;
+import ie.tus.project.Background;
+import ie.tus.project.Classes;
+import ie.tus.project.PCharacter;
+import ie.tus.project.Species;
+
 Scanner sc = new Scanner(System.in);
 private static List<PCharacter> characters = new ArrayList<>();
 
@@ -28,7 +31,7 @@ void main(){
 		System.out.println("5. Load Characters from File");
 		System.out.println("6. Select Character");
 		System.out.println("7. Delete Character");
-		System.out.println("0. Exit Aplication");
+		System.out.println("0. Exit Application");
 		//Check For Input
 		if (sc.hasNextInt()) {input = sc.nextInt();}
 		//Restart Loop in Invalid Inout
@@ -174,16 +177,22 @@ private PCharacter editCharacter(PCharacter originalCharacter) {
          case 2 -> newSpecies = setSpecies();
          case 3 -> newBackground = setBackground();
          case 4 -> {newLevel = readInt("Enter new level (1–3):", 1, 3);}
-         case 5 -> originalCharacter = editStats(originalCharacter);
+         case 5 -> {originalCharacter = editStats(originalCharacter);newStats = originalCharacter.getStats();}
          case 0 -> System.out.println("Finishing edit...");
      }
 
 	}while(selected !=0);
-	 LocalDateTime.now();
 	 AuditInfo updatedAudit = originalCharacter.getAuditInfo().update();
 	 //Return Edited Character
-	 return new PCharacter(originalCharacter.name(),
-			 newClass,newSpecies,newBackground,originalCharacter.getStats(),newLevel,updatedAudit);
+	 return new PCharacter(
+		        originalCharacter.name(),
+		        newClass,
+		        newSpecies,
+		        newBackground,
+		        newStats,
+		        newLevel,
+		        updatedAudit
+		);
 
 }
 
@@ -267,7 +276,15 @@ private PCharacter editStats(PCharacter pc) {
     int newHp = Math.max(1,pc.pClass().hitDie()+ (pc.getLevel() - 1) * (pc.pClass().hitDie() / 2 + 1)+ conMod * pc.getLevel());
 	 AuditInfo updatedAudit = pc.getAuditInfo().update();
     //Return Edited Character
-    return new PCharacter(pc.name(),pc.pClass(),pc.species(),pc.background(),stats,newHp,updatedAudit);
+	 return new PCharacter(
+		        pc.name(),
+		        pc.pClass(),
+		        pc.species(),
+		        pc.background(),
+		        stats,
+		        pc.getLevel(),
+		        updatedAudit
+		);
 }
 
 //Create Character
