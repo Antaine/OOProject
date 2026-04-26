@@ -1,21 +1,21 @@
 D&D Character Analytics Report
 ==============================
-Generated: 2026-04-26T15:22:18.283578500
+Generated: 2026-04-26T15:28:05.804907800
 
 Total characters: 3
 
 Character summaries:
+- A | Class: Paladin | Species: DRAGONBORN | Level: 1 | HP: 13
 - Adventurer | Class: Fighter | Species: HUMAN | Level: 1 | HP: 10
 - Adventurer | Class: Fighter | Species: HUMAN | Level: 1 | HP: 10
-- Bert | Class: Rogue | Species: AASIMAR | Level: 1 | HP: 10
 
 Grouped by class:
+- Paladin: 1 character(s)
 - Fighter: 2 character(s)
-- Rogue: 1 character(s)
 
 Grouped by species:
 - HUMAN: 2 character(s)
-- AASIMAR: 1 character(s)
+- DRAGONBORN: 1 character(s)
 
 Level partition:
 - Below level 5: 3 character(s)

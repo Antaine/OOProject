@@ -13,11 +13,13 @@ import ie.tus.project.PCharacter;
 import ie.tus.project.Species;
 import ie.tus.project.services.CharacterAnalyticsService;
 import ie.tus.project.services.CharacterReportService;
+import ie.tus.project.services.ConcurrentCharacterService;
 
 Scanner sc = new Scanner(System.in);
 private static List<PCharacter> characters = new ArrayList<>();
 private CharacterAnalyticsService analytics = new CharacterAnalyticsService();
 private CharacterReportService reportService = new CharacterReportService();
+private ConcurrentCharacterService concurrentService = new ConcurrentCharacterService();
 
 //Main Method Compact Source File
 void main(){
@@ -37,6 +39,7 @@ void main(){
 		System.out.println("7. Delete Character");
 		System.out.println("8. Analytics Menu");
 		System.out.println("9. Export Analytics Report");
+		System.out.println("10. Run Concurrent Stat Summary");
 		System.out.println("0. Exit Application");
 		//Check For Input
 		if (sc.hasNextInt()) {input = sc.nextInt();}
@@ -64,6 +67,7 @@ void main(){
 		    case 7 -> deleteCharacter();
 		    case 8 -> analyticsMenu();
 		    case 9 -> exportAnalyticsReport();
+		    case 10 -> runConcurrentStatSummary();
 		    case 0 -> sentinel =0;
 		    default -> System.out.println("Invalid option");
 		}
@@ -166,38 +170,21 @@ private void analyticsMenu() {
 
             case 8 -> {
                 System.out.println("\nCharacters grouped by species:");
-                analytics.groupBySpecies(characters)
-                        .forEach((species, list) ->
-                                System.out.println(species + ": " + list.size() + " character(s)")
-                        );
+                analytics.groupBySpecies(characters).forEach((species, list) ->System.out.println(species + ": " + list.size() + " character(s)"));
             }
 
             case 9 -> {
                 System.out.println("\nPartitioned by level 5 or higher:");
                 analytics.partitionByLevelFiveOrHigher(characters)
-                        .forEach((levelFiveOrHigher, list) ->
-                                System.out.println(
-                                        (levelFiveOrHigher ? "Level 5+" : "Below Level 5")
-                                                + ": " + list.size() + " character(s)"
-                                )
-                        );
+                        .forEach((levelFiveOrHigher, list) ->System.out.println((levelFiveOrHigher ? "Level 5+" : "Below Level 5")+ ": " + list.size() + " character(s)"));
             }
 
             case 10 -> System.out.println("Distinct classes: " + analytics.distinctClasses(characters));
-
-            case 11 -> {
-                System.out.println("\nFirst 3 characters:");
-                analytics.firstThreeCharacters(characters)
-                        .forEach(c -> System.out.println(summary(c)));
-            }
-
+            case 11 -> {System.out.println("\nFirst 3 characters:");analytics.firstThreeCharacters(characters).forEach(c -> System.out.println(summary(c)));}
             case 12 -> {
-                System.out.println("All characters have valid stats: "
-                        + analytics.allCharactersHaveValidStats(characters));
-                System.out.println("Any character level 10 or higher: "
-                        + analytics.anyCharacterIsLevelTenOrHigher(characters));
-                System.out.println("No characters have invalid stats: "
-                        + analytics.noCharactersHaveInvalidStats(characters));
+                System.out.println("All characters have valid stats: "+ analytics.allCharactersHaveValidStats(characters));
+                System.out.println("Any character level 10 or higher: "+ analytics.anyCharacterIsLevelTenOrHigher(characters));
+                System.out.println("No characters have invalid stats: " + analytics.noCharactersHaveInvalidStats(characters));
             }
 
             case 0 -> System.out.println("Returning to main menu...");
@@ -231,6 +218,24 @@ private void exportAnalyticsReport() {
 
     } catch (Exception e) {
         System.out.println("Error exporting analytics report: " + e.getMessage());
+    }
+}
+
+private void runConcurrentStatSummary() {
+    if (characters.isEmpty()) {
+        System.out.println("No characters available. Create or load characters first.");
+        return;
+    }
+
+    try {
+        System.out.println("\n--- Concurrent Character Stat Summary ---");
+
+        List<String> summaries = concurrentService.calculateStatSummaries(characters);
+
+        summaries.forEach(System.out::println);
+
+    } catch (Exception e) {
+        System.out.println("Error running concurrent stat summary: " + e.getMessage());
     }
 }
 
