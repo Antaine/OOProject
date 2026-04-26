@@ -49,4 +49,8 @@ public class LocalisationService {
 
         return dateTime.format(formatter);
     }
+    
+    public String currentLanguageName() {
+        return currentLocale.getDisplayLanguage(currentLocale);
+    }
 }
