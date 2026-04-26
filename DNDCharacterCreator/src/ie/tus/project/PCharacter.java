@@ -1,8 +1,8 @@
 package ie.tus.project;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Scanner;
-//Fiels are final and private automatically
 //Player Character Class
 public final class PCharacter extends CharacterBase implements Describable {
 
@@ -152,8 +152,6 @@ public final class PCharacter extends CharacterBase implements Describable {
 		int conModifier = (stats[2]-10)/2;
 		return pClass.hitDie() + conModifier;
 	}
-	
-	public void levelUp() {}
 
 	//Character Description
 	@Override

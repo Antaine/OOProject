@@ -11,6 +11,5 @@ public enum Species {
     HALFLING,
     HUMAN,
     ORC,
-    TIEFLING;
-
+    TIEFLING
 }

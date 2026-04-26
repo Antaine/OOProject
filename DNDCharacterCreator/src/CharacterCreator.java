@@ -27,8 +27,9 @@ private LocalisationService localisation = new LocalisationService();
 //Main Method Compact Source File
 void main() {
 	// Variables
-	int input, sentinel = 1;
-	IO.println("Welcome to the D&D 2024 Character Creator");
+	int input;
+	boolean running = true;
+	IO.println("Welcome to the D&D 2024 Character Manager & Analytics System");
 	System.out.println("Please select an option");
 
 	// Main Loop - Run until 0 is selected
@@ -49,7 +50,7 @@ void main() {
 		if (sc.hasNextInt()) {
 			input = sc.nextInt();
 		}
-		// Restart Loop in Invalid Inout
+		// Restart Loop in Invalid Input
 		else {
 			System.out.println("Invalid input, please enter a valid number");
 			sc.next();
@@ -75,11 +76,10 @@ void main() {
 		case 9 -> exportAnalyticsReport();
 		case 10 -> runConcurrentStatSummary();
 		case 11 -> changeLanguage();
-		case 12 -> scopedValueDemo();
-		case 0 -> sentinel = 0;
+		case 0 -> running = false;
 		default -> System.out.println("Invalid option");
 		}
-	} while (sentinel == 1);
+	} while (running);
 }
 
 //Displays List of Saved Characters and Index
@@ -573,7 +573,7 @@ public Classes setClass() {
 		IO.println(pClass);
 		selectedClass = Classes.values()[pClass - 1];
 		System.out.println("Class is: " + selectedClass);
-	} while (pClass < 1 || pClass > 12);
+	} while (pClass < 1 || pClass > Classes.values().length);
 	return selectedClass;
 }
 
@@ -592,7 +592,7 @@ public Species setSpecies() {
 		IO.println(species);
 		selectedSpecies = Species.values()[species - 1];
 		System.out.println(selectedSpecies);
-	} while (species < 1 || species > 10);
+	} while (species < 1 || species > Species.values().length);
 	return selectedSpecies;
 }
 
@@ -610,7 +610,7 @@ public Background setBackground() {
 		IO.println(bg);
 		selectedBackground = Background.values()[bg - 1];
 		System.out.println(selectedBackground);
-	} while (bg < 1 || bg > 16);
+	} while (bg < 1 || bg > Background.values().length);
 	return selectedBackground;
 }
 

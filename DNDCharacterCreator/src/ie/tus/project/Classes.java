@@ -9,7 +9,3 @@ Classes(int hitDie){this.hitDie = hitDie;}
 public int hitDie() {return hitDie;}
 
 }
-
-
-
-
