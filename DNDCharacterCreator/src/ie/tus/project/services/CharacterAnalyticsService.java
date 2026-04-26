@@ -13,6 +13,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Gatherers;
 
 public class CharacterAnalyticsService {
 
@@ -193,5 +194,12 @@ public class CharacterAnalyticsService {
         return stats.length == 6 &&
                 java.util.Arrays.stream(stats)
                         .allMatch(stat -> stat >= 3 && stat <= 20);
+    }
+    
+    public List<List<PCharacter>> characterPages(List<PCharacter> characters, int pageSize) {
+        return characters.stream()
+                .sorted(Comparator.comparing(PCharacter::getName))
+                .gather(Gatherers.windowFixed(pageSize))
+                .toList();
     }
 }

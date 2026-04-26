@@ -44,7 +44,6 @@ void main() {
 		System.out.println("9. " + localisation.text("menu.report"));
 		System.out.println("10. " + localisation.text("menu.concurrent"));
 		System.out.println("11. " + localisation.text("menu.language"));
-		System.out.println("12. Scoped Value Demo");
 		System.out.println("0. " + localisation.text("menu.exit"));
 		// Check For Input
 		if (sc.hasNextInt()) {
@@ -137,9 +136,10 @@ private void analyticsMenu() {
 		System.out.println("10. Show Distinct Classes");
 		System.out.println("11. Show First 3 Characters");
 		System.out.println("12. Validate All Character Stats");
+		System.out.println("13. Show Characters in Pages Using Stream Gatherer");
 		System.out.println("0. Back to Main Menu");
 
-		choice = readInt("Select an analytics option:", 0, 12);
+		choice = readInt("Select an analytics option:", 0, 13);
 
 		switch (choice) {
 		case 1 -> System.out.println("Character count: " + analytics.countCharacters(characters));
@@ -193,6 +193,17 @@ private void analyticsMenu() {
 					"Any character level 10 or higher: " + analytics.anyCharacterIsLevelTenOrHigher(characters));
 			System.out
 					.println("No characters have invalid stats: " + analytics.noCharactersHaveInvalidStats(characters));
+		}
+		
+		case 13 -> {
+		    System.out.println("\nCharacters grouped into pages of 3 using Stream Gatherers:");
+
+		    List<List<PCharacter>> pages = analytics.characterPages(characters, 3);
+
+		    for (int i = 0; i < pages.size(); i++) {
+		        System.out.println("\nPage " + (i + 1));
+		        pages.get(i).forEach(c -> System.out.println(summary(c)));
+		    }
 		}
 
 		case 0 -> System.out.println("Returning to main menu...");
