@@ -1,0 +1,27 @@
+D&D Character Analytics Report
+==============================
+Generated: 2026-04-26T15:22:18.283578500
+
+Total characters: 3
+
+Character summaries:
+- Adventurer | Class: Fighter | Species: HUMAN | Level: 1 | HP: 10
+- Adventurer | Class: Fighter | Species: HUMAN | Level: 1 | HP: 10
+- Bert | Class: Rogue | Species: AASIMAR | Level: 1 | HP: 10
+
+Grouped by class:
+- Fighter: 2 character(s)
+- Rogue: 1 character(s)
+
+Grouped by species:
+- HUMAN: 2 character(s)
+- AASIMAR: 1 character(s)
+
+Level partition:
+- Below level 5: 3 character(s)
+- Level 5 or higher: 0 character(s)
+
+Validation:
+- All characters have valid stats: true
+- Any character level 10 or higher: false
+- No characters have invalid stats: true
