@@ -123,21 +123,21 @@ private void analyticsMenu() {
 	int choice;
 
 	do {
-		System.out.println("\n--- Character Analytics Menu ---");
-		System.out.println("1. Count Characters");
-		System.out.println("2. Show Character Names");
-		System.out.println("3. Sort by Name");
-		System.out.println("4. Sort by Level");
-		System.out.println("5. Highest Level Character");
-		System.out.println("6. Lowest Level Character");
-		System.out.println("7. Group by Class");
-		System.out.println("8. Group by Species");
-		System.out.println("9. Partition by Level 5+");
-		System.out.println("10. Show Distinct Classes");
-		System.out.println("11. Show First 3 Characters");
-		System.out.println("12. Validate All Character Stats");
-		System.out.println("13. Show Characters in Pages Using Stream Gatherer");
-		System.out.println("0. Back to Main Menu");
+		System.out.println("\n--- " + localisation.text("analytics.title") + " ---");
+		System.out.println("1. " + localisation.text("analytics.count"));
+		System.out.println("2. " + localisation.text("analytics.names"));
+		System.out.println("3. " + localisation.text("analytics.sortName"));
+		System.out.println("4. " + localisation.text("analytics.sortLevel"));
+		System.out.println("5. " + localisation.text("analytics.highest"));
+		System.out.println("6. " + localisation.text("analytics.lowest"));
+		System.out.println("7. " + localisation.text("analytics.groupClass"));
+		System.out.println("8. " + localisation.text("analytics.groupSpecies"));
+		System.out.println("9. " + localisation.text("analytics.partition"));
+		System.out.println("10. " + localisation.text("analytics.distinct"));
+		System.out.println("11. " + localisation.text("analytics.firstThree"));
+		System.out.println("12. " + localisation.text("analytics.validate"));
+		System.out.println("13. " + localisation.text("analytics.gathererPages"));
+		System.out.println("0. " + localisation.text("analytics.back"));
 
 		choice = readInt("Select an analytics option:", 0, 13);
 
