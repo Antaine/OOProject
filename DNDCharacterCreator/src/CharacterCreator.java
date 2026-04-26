@@ -14,12 +14,14 @@ import ie.tus.project.Species;
 import ie.tus.project.services.CharacterAnalyticsService;
 import ie.tus.project.services.CharacterReportService;
 import ie.tus.project.services.ConcurrentCharacterService;
+import ie.tus.project.services.LocalisationService;
 
 Scanner sc = new Scanner(System.in);
 private static List<PCharacter> characters = new ArrayList<>();
 private CharacterAnalyticsService analytics = new CharacterAnalyticsService();
 private CharacterReportService reportService = new CharacterReportService();
 private ConcurrentCharacterService concurrentService = new ConcurrentCharacterService();
+private LocalisationService localisation = new LocalisationService();
 
 //Main Method Compact Source File
 void main(){
@@ -30,17 +32,18 @@ void main(){
 	
 	//Main Loop - Run until 0 is selected
 	do{
-		System.out.println("1. Create Character");
-		System.out.println("2. Quick Character");
-		System.out.println("3. Display Characters");
-		System.out.println("4. Save Characters to File");
-		System.out.println("5. Load Characters from File");
-		System.out.println("6. Select Character");
-		System.out.println("7. Delete Character");
-		System.out.println("8. Analytics Menu");
-		System.out.println("9. Export Analytics Report");
-		System.out.println("10. Run Concurrent Stat Summary");
-		System.out.println("0. Exit Application");
+		System.out.println("1. " + localisation.text("menu.create"));
+		System.out.println("2. " + localisation.text("menu.quick"));
+		System.out.println("3. " + localisation.text("menu.display"));
+		System.out.println("4. " + localisation.text("menu.save"));
+		System.out.println("5. " + localisation.text("menu.load"));
+		System.out.println("6. " + localisation.text("menu.select"));
+		System.out.println("7. " + localisation.text("menu.delete"));
+		System.out.println("8. " + localisation.text("menu.analytics"));
+		System.out.println("9. " + localisation.text("menu.report"));
+		System.out.println("10. " + localisation.text("menu.concurrent"));
+		System.out.println("11. " + localisation.text("menu.language"));
+		System.out.println("0. " + localisation.text("menu.exit"));
 		//Check For Input
 		if (sc.hasNextInt()) {input = sc.nextInt();}
 		//Restart Loop in Invalid Inout
@@ -68,6 +71,7 @@ void main(){
 		    case 8 -> analyticsMenu();
 		    case 9 -> exportAnalyticsReport();
 		    case 10 -> runConcurrentStatSummary();
+		    case 11 -> changeLanguage();
 		    case 0 -> sentinel =0;
 		    default -> System.out.println("Invalid option");
 		}
@@ -832,4 +836,23 @@ public void quickCharacter() {
     //Add Quick character
     characters.add(playerCharacter);
     System.out.println("Quick Character saved!\n");
+}
+
+private void changeLanguage() {
+    System.out.println("\nSelect language:");
+    System.out.println("1. English");
+    System.out.println("2. Gaeilge");
+    System.out.println("3. Italiano");
+    System.out.println("4. Español");
+
+    int choice = readInt("Choose language:", 1, 4);
+
+    switch (choice) {
+        case 1 -> localisation.setEnglish();
+        case 2 -> localisation.setIrish();
+        case 3 -> localisation.setItalian();
+        case 4 -> localisation.setSpanish();
+    }
+
+    System.out.println(localisation.text("message.languageChanged"));
 }
